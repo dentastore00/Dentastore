@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DENTA STORE - المفضلة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #f9f9f9; color: #333; }
+        
+        /* الشريط العلوي */
+        .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar div { display: flex; gap: 20px; align-items: center; }
+        .currency-selector { background: #0056b3; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer; outline: none; }
+        
+        /* الهيدر الرئيسي */
+        header { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 15px 3%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo-area img { height: 65px; width: auto; object-fit: contain; }
+        
+        .search-container { flex: 0 0 45%; display: flex; border: 2px solid #0056b3; border-radius: 6px; overflow: hidden; background: #fff; }
+        .search-category-select { background: #f1f1f1; border: none; border-left: 1px solid #ddd; padding: 0 12px; font-family: 'Cairo', sans-serif; font-size: 13px; color: #333; outline: none; cursor: pointer; }
+        .search-bar { flex: 1; display: flex; }
+        .search-bar input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; }
+        .search-bar button { background-color: #0056b3; color: white; border: none; padding: 0 20px; cursor: pointer; }
+        
+        .header-icons { display: flex; gap: 20px; align-items: center; }
+        .header-icons a { text-decoration: none; color: #0b1c3f; display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; }
+        .header-icons i { font-size: 20px; color: #0056b3; }
+        .badge { background: #dc3545; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; font-weight: bold; }
+
+        /* شريط التنقل */
+        nav.main-nav { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 3%; display: flex; justify-content: space-between; align-items: center; }
+        .all-departments { background-color: #0056b3; color: white; padding: 12px 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .nav-links { list-style: none; display: flex; gap: 20px; }
+        .nav-links li a { text-decoration: none; color: #333; font-size: 13px; font-weight: 600; padding: 15px 0; display: block; transition: 0.3s; }
+        .nav-links li a:hover, .nav-links li a.active { color: #0056b3; }
+
+        /* مسار التنقل */
+        .breadcrumb-section { padding: 15px 5%; font-size: 13px; color: #666; display: flex; gap: 8px; align-items: center; }
+        .breadcrumb-section a { color: #0056b3; text-decoration: none; font-weight: 600; }
+
+        /* محتوى المفضلة */
+        .wishlist-container { padding: 20px 5% 50px 5%; min-height: 400px; }
+        .wishlist-title { font-size: 24px; color: #0b1c3f; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #0056b3; padding-bottom: 10px; display: inline-block; }
+        
+        .empty-wishlist { text-align: center; padding: 50px; background: white; border-radius: 8px; border: 1px solid #e5e5e5; }
+        .empty-wishlist i { font-size: 50px; color: #ccc; margin-bottom: 15px; display: block; }
+        .empty-wishlist p { font-size: 16px; color: #666; margin-bottom: 20px; }
+        .return-btn { background-color: #0056b3; color: white; padding: 10px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block; }
+
+        /* تنسيق بطاقات المنتجات داخل المفضلة */
+        .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; text-align: right; margin-top: 20px; }
+        .product-card { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e5e5e5; position: relative; }
+        .product-card img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 10px; }
+        .product-card h3 { font-size: 15px; color: #333; margin-bottom: 8px; }
+        .product-card .price { color: #0056b3; font-weight: bold; font-size: 14px; }
+
+        /* شريط الميزات */
+        .features-bar { margin: 20px 5%; background: white; border-radius: 8px; padding: 20px; display: flex; justify-content: space-around; border: 1px solid #e5e5e5; }
+        .feature-item { display: flex; align-items: center; gap: 15px; }
+        .feature-item i { font-size: 28px; color: #0056b3; }
+        .feature-item h4 { font-size: 14px; color: #0b1c3f; }
+        .feature-item p { font-size: 12px; color: #777; }
+
+            
+    /* منع التمرير الأفقي للصفحة ككل */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* جعل القائمة قابلة للتمرير */
+    .nav-links {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* منع العناصر من النزول لسطر جديد */
+    .nav-links li {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+       /* 1. حذف زر "كل الأقسام" الأزرق الكبير */
+    .all-departments, 
+    [onclick*="displayProducts('all')"] {
+        display: none !important;
+    }
+
+    /* 2. حذف قائمة "كل الأقسام" الموجودة داخل شريط البحث بدقة */
+    .search-category-select {
+        display: none !important;
+    }
+
+    
+    /* إخفاء النصوص داخل الشريط العلوي الأزرق وإبقاء الأيقونات فقط ليكون نحيفاً */
+    header span[id^="txt"],
+    .top-bar span,
+    .top-bar p {
+        display: none !important;
+    }
+
+    /* تقليل مساحات الشريط العلوي ليصبح نحيفاً وثابت الإرتفاع على الجوال واللابتوب */
+    .top-bar, 
+    header > div:first-child {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        min-height: unset !important;
+    }
+
+     /* 3. ضبط الشريط العلوي وتثبيت زر البحث يميناً واللغة يساراً */
+    .top-bar {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 40px !important;
+        padding: 5px 15px !important;
+    }
+
+    /* تثبيت زر اللغة في أقصى اليسار */
+    #langSelect {
+        position: absolute !important;
+        left: 10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    /* تثبيت أيقونة البحث في أقصى اليمين */
+    .mobile-search-icon {
+        position: absolute !important;
+        right: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 1000;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div>
+            <span><i class="fa-solid fa-headset"></i> دعم فني متخصص</span>
+            <span><i class="fa-solid fa-shield-halved"></i> جودة أصلية 100%</span>
+            <span><i class="fa-solid fa-truck"></i> توصيل لجميع المحافظات</span>
+        </div>
+        <div>
+            <span><i class="fa-solid fa-phone"></i> +963 987 654 321</span>
+            <select class="currency-selector">
+                <option value="ar">العربية</option>
+                <option value="tr">Türkçe</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- الهيدر الرئيسي -->
+    <header>
+        <div class="logo-area">
+            <img src="logo.jpg" alt="DENTA STORE Logo">
+        </div>
+        
+        <div class="search-container">
+            <select class="search-category-select">
+                <option value="all">كل الأقسام</option>
+                <option value="clinics">العيادات</option>
+                <option value="labs">المخابر</option>
+                <option value="maintenance">الصيانة</option>
+            </select>
+            <div class="search-bar">
+                <input type="text" placeholder="ابحث عن منتج، شركة أو تصنيف...">
+                <button><i class="fa-solid fa-search"></i></button>
+            </div>
+        </div>
+        
+        <div class="header-icons">
+            <a href="wishlist.html" style="text-decoration: none; color: inherit; display: inline-block; text-align: center; cursor: pointer;">
+                <div style="cursor: pointer;">
+                    <i class="fa-solid fa-heart" style="color: #0056b3; display: block; font-size: 20px; margin-bottom: 3px;"></i>
+                    <span id="txtWishlist">المفضلة</span>
+                    <span class="badge" id="wishlistCount">0</span>
+                </div>
+            </a>
+              
+            <a href="cart.html" style="text-decoration: none; color: inherit;">
+                <div style="cursor: pointer; display: inline-block; text-align: center;">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 20px; margin-bottom: 3px; display: block;"></i><span id="txtCart">السلة</span>
+                    <span class="badge" id="cartCount">0</span>
+                </div>
+            </a>
+            <a href="login.html" style="text-decoration: none; color: inherit; display: inline-block;">
+                <div style="cursor: pointer; text-align: center;">
+                    <i class="fa-solid fa-user" style="font-size: 20px; margin-bottom: 3px; display: block;"></i> <span id="txtAccount">حسابي</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- شريط التنقل -->
+    <nav class="main-nav">
+        <div class="all-departments"><i class="fa-solid fa-bars"></i> كل الأقسام</div>
+        <ul class="nav-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="#">الشركات</a></li>
+            <li><a href="#">العروض</a></li>
+            <li><a href="#">الأكثر مبيعاً</a></li>
+            <li><a href="#">جديد المنتجات</a></li>
+            <li><a href="#">خدماتنا</a></li>
+            <li><a href="#" onclick="openModal('aboutModal'); return false;" data-key="navAbout">من نحن</a></li>
+            <li><a href="javascript:void(0);" onclick="openContactModal()" data-key="navContact" style="text-decoration: none; color: inherit;">تواصل معنا</a></li>
+        </ul>
+    </nav>
+
+    <!-- مسار التنقل -->
+    <div class="breadcrumb-section">
+        <a href="index.html">الرئيسية</a>
+        <i class="fa-solid fa-chevron-left" style="font-size: 10px;"></i>
+        <span>المفضلة</span>
+    </div>
+
+    <!-- قسم عرض المفضلة -->
+    <div class="wishlist-container">
+        <h1 class="wishlist-title">قائمة المفضلة</h1>
+        
+        <!-- الحاوية التي ستعرض المنتجات أو رسالة الفراغ -->
+        <div id="wishlistContentArea">
+            <div class="empty-wishlist" id="emptyWishlistDiv">
+                <i class="fa-regular fa-heart"></i>
+                <p>قائمة المفضلة لديك فارغة حالياً!</p>
+                <a href="index.html" class="return-btn">تصفح المنتجات الآن</a>
+            </div>
+            <div class="wishlist-grid" id="wishlistGridContainer"></div>
+        </div>
+    </div>
+
+   
+
+    <!-- كود الجافاسكريبت لربط وعرض المنتجات وتحديث العداد -->
+   <!-- كود الجافاسكريبت المحسّن لقراءة المفضلة من أي مفتاح محتمل -->
+ <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // البحث عن المفضلة بأكثر من اسم محتمل قد تستخدمه الصفحة الرئيسية
+            let wishlist = [];
+            let activeKey = 'wishlist'; // لحفظ المفتاح النشط الذي تم العثور على البيانات فيه
+            const possibleKeys = ['wishlist', 'favorites', 'wishlistItems', 'fav_products', 'saved_items'];
+            
+            for (let key of possibleKeys) {
+                let data = localStorage.getItem(key);
+                if (data) {
+                    try {
+                        let parsed = JSON.parse(data);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            wishlist = parsed;
+                            activeKey = key;
+                            break;
+                        }
+                    } catch(e) {}
+                }
+            }
+
+            // إذا لم يتم العثور عليها بالأسماء المعتادة، فحص جميع مفاتيح التخزين
+            if (wishlist.length === 0) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    let key = localStorage.key(i);
+                    if (key.toLowerCase().includes('wish') || key.toLowerCase().includes('fav')) {
+                        try {
+                            let data = JSON.parse(localStorage.getItem(key));
+                            if (Array.isArray(data) && data.length > 0) {
+                                wishlist = data;
+                                activeKey = key;
+                                break;
+                            }
+                        } catch(e) {}
+                    }
+                }
+            }
+            
+            // تحديث العداد في الهيدر تلقائياً
+            const countBadge = document.getElementById('wishlistCount');
+            if (countBadge) {
+                countBadge.textContent = wishlist.length;
+            }
+
+            const emptyDiv = document.getElementById('emptyWishlistDiv');
+            const gridContainer = document.getElementById('wishlistGridContainer');
+
+            if (wishlist.length > 0) {
+                if (emptyDiv) emptyDiv.style.display = 'none';
+                if (gridContainer) {
+                    gridContainer.innerHTML = wishlist.map((item, index) => {
+                        if (typeof item === 'object' && item !== null) {
+                            return `
+                                <div class="product-card" style="position: relative;">
+                                    <button onclick="removeItem(${index})" title="حذف من المفضلة" style="position: absolute; top: 10px; left: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                        <i class="fa-solid fa-trash-can" style="font-size: 14px; color: white;"></i>
+                                    </button>
+                                    <img src="${item.image || item.img || 'logo.jpg'}" alt="${item.name || item.title || 'منتج'}">
+                                    <h3>${item.name || item.title || 'منتج دنتال'}</h3>
+                                    <div class="price">${item.price || ''}</div>
+                                </div>
+                            `;
+                        } else {
+                            return `
+                                <div class="product-card" style="position: relative;">
+                                    <button onclick="removeItem(${index})" title="حذف من المفضلة" style="position: absolute; top: 10px; left: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                        <i class="fa-solid fa-trash-can" style="font-size: 14px; color: white;"></i>
+                                    </button>
+                                    <img src="logo.jpg" alt="منتج">
+                                    <h3>${item}</h3>
+                                    <div class="price">متوفر في المتجر</div>
+                                </div>
+                            `;
+                        }
+                    }).join('');
+                }
+            } else {
+                if (emptyDiv) emptyDiv.style.display = 'block';
+                if (gridContainer) gridContainer.innerHTML = '';
+            }
+
+            // دالة الحذف لتحديث الذاكرة وإعادة تحميل الصفحة
+            window.removeItem = function(index) {
+                wishlist.splice(index, 1);
+                localStorage.setItem(activeKey, JSON.stringify(wishlist));
+                location.reload();
+            }
+        });
+    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. جلب البيانات من المفاتيح الموحدة
+        const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
+        const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
+        
+        // 2. تحديث عداد المفضلة
+        const wBadge = document.getElementById('wishlistCount');
+        if (wBadge) wBadge.textContent = wishlist.length;
+
+        // 3. تحديث عداد السلة (حساب مجموع الكميات)
+        const cBadge = document.getElementById('cartCount');
+        if (cBadge) {
+            const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            cBadge.textContent = totalQty;
+        }
+    });
+</script>
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // إغلاق النافذة عند الضغط في أي مكان خارجها
+    window.onclick = function(event) {
+        if (event.target.id === 'aboutModal' || event.target.id === 'servicesModal') {
+            event.target.style.display = 'none';
+        }
+    }
+</script>
+
+<div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
+        <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
+        <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
+        <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
+    </div>
+</div>
+</body>
+</html>

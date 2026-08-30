@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - DENTAL HUB Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #f1f5f9; color: #333; display: flex; min-height: 100vh; }
+
+        .admin-sidebar { width: 260px; background: #0f172a; color: white; display: flex; flex-direction: column; }
+        .sidebar-brand { padding: 20px; font-size: 18px; font-weight: bold; background: #0284c7; display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 15px 0; flex: 1; }
+        .sidebar-menu li { padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #94a3b8; transition: 0.2s; }
+        .sidebar-menu li:hover, .sidebar-menu li.active { background: #1e293b; color: white; border-right: 4px solid #0284c7; }
+
+        .admin-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .admin-header h1 { font-size: 20px; color: #0f172a; }
+
+        .section-box { background: white; border-radius: 10px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .section-box h3 { font-size: 16px; margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #0284c7; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group.full { grid-column: span 2; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #475569; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
+
+        .btn-primary { background: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary:hover { background: #0369a1; }
+        .btn-danger { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-success { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-success:hover { background: #059669; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; color: #475569; font-weight: bold; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* إخفاء القائمة الجانبية افتراضياً على الموبايل وإضافة تنسيق الزر */
+@media screen and (max-width: 768px) {
+    .sidebar, aside, .admin-sidebar {
+        display: none !important;
+        position: fixed !important;
+        top: 0;
+        right: 0; /* فتح القائمة من اليمين لتناسب اللغة العربية */
+        width: 260px !important;
+        height: 100vh !important;
+        z-index: 9999;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+    }
+    
+    /* عند تفعيل القائمة تظهر */
+    .sidebar.show-sidebar, aside.show-sidebar, .admin-sidebar.show-sidebar {
+        display: block !important;
+    }
+
+    /* زر القائمة الذي سيظهر على الجوال */
+    .mobile-menu-btn {
+        display: block !important;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 10000;
+        background: #0056b3;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        font-size: 18px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+}
+
+/* إخفاء الزر تماماً على اللابتوب */
+@media screen and (min-width: 769px) {
+    .mobile-menu-btn {
+        display: none !important;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="admin-sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-gear"></i> لوحة التحكم
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active" onclick="switchTab('productsTab', 'إدارة المنتجات')"><i class="fa-solid fa-box"></i> إدارة المنتجات</li>
+            <li onclick="switchTab('ordersTab', 'إدارة الطلبات')"><i class="fa-solid fa-box-open"></i> إدارة الطلبات</li>
+            <li onclick="switchTab('couponsTab', 'إدارة أكواد الخصم والفئات')"><i class="fa-solid fa-ticket"></i> إدارة أكواد الخصم والفئات</li>
+            <li onclick="switchTab('storeDesignTab', 'تخصيص صور وأقسام المتجر')"><i class="fa-solid fa-image"></i> تخصيص صور وأقسام المتجر</li>
+            <li onclick="switchTab('brandsTab', 'إدارة الشركات والبراندات')"><i class="fa-solid fa-building"></i> إدارة الشركات والبراندات</li>
+            <li onclick="switchTab('subcategoriesTab', 'إدارة التصنيفات الفرعية')"><i class="fa-solid fa-layer-group"></i> إدارة التصنيفات الفرعية</li>
+            <li onclick="goToStore()"><i class="fa-solid fa-store"></i> الانتقال للمتجر الرئيسي</li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-header">
+            <h1 id="pageTitle">إدارة المنتجات</h1>
+            <span style="font-size: 13px; color: #64748b;"><i class="fa-solid fa-user-shield"></i> مدير النظام (Admin)</span>
+        </div>
+
+        <!-- تبويب 1: إدارة المنتجات -->
+        <div id="productsTab" class="tab-content active">
+            <div class="section-box">
+                <h3 id="formTitle"><i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد</h3>
+                <input type="hidden" id="editIndex" value="-1">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>اسم المنتج:</label>
+                        <input type="text" id="prodName" placeholder="مثال: Composite Syringe">
+                    </div>
+                    <div class="form-group">
+                        <label>رمز المنتج (SKU):</label>
+                        <input type="text" id="prodSku" placeholder="مثال: DNT-101">
+                    </div>
+                    <div class="form-group">
+                        <label>السعر ($):</label>
+                        <input type="number" id="prodPrice" placeholder="مثال: 45">
+                    </div>
+                    <div class="form-group">
+                        <label>السعر السابق (للعروض - اختياري):</label>
+                        <input type="number" id="prodOldPrice" placeholder="مثال: 60">
+                    </div>
+                    <div class="form-group">
+                        <label>القسم:</label>
+                        <select id="prodCategory">
+                            <option value="">اختر القسم</option>
+                            <option value="مستلزمات العيادات">مستلزمات العيادات</option>
+                            <option value="مستلزمات المخابر">مستلزمات المخابر</option>
+                            <option value="الصيانة وقطع الغيار">الصيانة وقطع الغيار</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>التصنيف الفرعي:</label>
+                        <select id="prodSubCategory">
+                            <option value="">اختر التصنيف الفرعي</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>الشركة المصنعة:</label>
+                        <select id="prodBrand">
+                            <option value="">اختر الشركة المصنعة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط صورة المنتج (URL):</label>
+                        <input type="text" id="prodImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="prodBestSeller" style="width: 20px; height: 20px;">
+                        <label for="prodBestSeller" style="margin: 0; cursor: pointer;">إضافة إلى قائمة الأكثر مبيعاً</label>
+                    </div>
+                    <div class="form-group full">
+                        <label>وصف المنتج وتفاصيله:</label>
+                        <textarea id="prodDescription" rows="4" placeholder="اكتب تفاصيل ومواصفات المنتج هنا..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="saveProduct()"><i class="fa-solid fa-save"></i> حفظ المنتج</button>
+            </div>
+
+            <div class="section-box">
+                <h3><i class="fa-solid fa-list"></i> قائمة المنتجات الحالية</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>الاسم</th>
+                            <th>SKU</th>
+                            <th>السعر</th>
+                            <th>القسم / الشركة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminProductsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تبويب 2: إدارة الطلبات -->
+        <div id="ordersTab" class="tab-content">
+            <div class="section-box">
+                <h3><i class="fa-solid fa-clipboard-list"></i> طلبات المتجر الواردة</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>التاريخ</th>
+                            <th>المنتجات والكميات</th>
+                            <th>الإجمالي</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminOrdersList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تبويب 3: أكواد الخصم ونسب الفئات -->
+        <div id="couponsTab" class="tab-content">
+            <div class="section-box">
+                <h3><i class="fa-solid fa-ticket"></i> إدارة أكواد الخصم ونسب الفئات</h3>
+                <div style="margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 8px;">
+                    <h4 style="font-size: 14px; margin-bottom: 10px; color: #0f172a;">إضافة كود خصم جديد</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>كود الخصم (مثال: DENTA20)</label>
+                            <input type="text" id="newCouponCode" placeholder="أدخل الكود هنا...">
+                        </div>
+                        <div class="form-group">
+                            <label>نسبة الخصم (%)</label>
+                            <input type="number" id="newCouponPercent" placeholder="مثال: 15">
+                        </div>
+                    </div>
+                    <button type="button" class="btn-primary" onclick="addNewCoupon()" style="margin-top: 10px;">إضافة الكود</button>
+                </div>
+
+                <h4 style="font-size: 14px; margin-bottom: 10px; color: #0f172a;">الأكواد المفعلة حالياً</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الكود</th>
+                            <th>نسبة الخصم</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminCouponsTableBody"></tbody>
+                </table>
+
+                <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                <h4 style="font-size: 14px; margin-bottom: 10px; color: #0f172a;">تحديد نسب الخصم التلقائي للفئات</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>نسبة خصم "طالب طب أسنان" (%)</label>
+                        <input type="number" id="categoryStudentDiscount" value="5" onchange="updateCategoryDiscounts()">
+                    </div>
+                    <div class="form-group">
+                        <label>نسبة خصم "عيادة" (%)</label>
+                        <input type="number" id="categoryClinicDiscount" value="10" onchange="updateCategoryDiscounts()">
+                    </div>
+                    <div class="form-group">
+                        <label>نسبة خصم "مخبر أسنان" (%)</label>
+                        <input type="number" id="categoryLabDiscount" value="15" onchange="updateCategoryDiscounts()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب 4: تخصيص المتجر -->
+        <div id="storeDesignTab" class="tab-content">
+            <div class="section-box">
+                <h3><i class="fa-solid fa-image"></i> تخصيص البانر الرئيسي (Hero Banner)</h3>
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label>عنوان البانر الرئيسي:</label>
+                        <input type="text" id="heroTitle" placeholder="كل ما تحتاجه لعيادتك في مكان واحد">
+                    </div>
+                    <div class="form-group full">
+                        <label>الوصف النصي للبانر:</label>
+                        <textarea id="heroDesc" rows="2" placeholder="أكبر متجر إلكتروني لمستلزمات طب الأسنان..."></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label>رابط الصورة أو أيقونة البانر:</label>
+                        <input type="text" id="heroImage" placeholder="رابط صورة البانر">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="saveHeroBanner()"><i class="fa-solid fa-save"></i> حفظ إعدادات البانر</button>
+            </div>
+        </div>
+
+        <!-- تبويب 5: إدارة الشركات -->
+        <div id="brandsTab" class="tab-content">
+            <div class="section-box">
+                <h3><i class="fa-solid fa-building"></i> إضافة شركة / براند جديد لشريط الشركات</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>اسم الشركة:</label>
+                        <input type="text" id="newBrandName" placeholder="مثال: Philips">
+                    </div>
+                    <div class="form-group">
+                        <label>اختر شعار الشركة من الكمبيوتر:</label>
+                        <input type="file" id="newBrandImageFile" accept="image/*">
+                    </div>
+                </div>
+                <button class="btn-primary" id="addBrandBtn" onclick="addNewBrand()"><i class="fa-solid fa-plus"></i> إضافة الشركة للشريط</button>
+            </div>
+
+            <div class="section-box">
+                <h3><i class="fa-solid fa-list"></i> الشركات الحالية في المتجر</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>شعار الشركة</th>
+                            <th>اسم الشركة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brandsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تبويب 6: إدارة التصنيفات الفرعية -->
+        <div id="subcategoriesTab" class="tab-content">
+            <div class="section-box">
+                <h3 style="margin-bottom: 20px; color: #0b1c3f; font-size: 18px; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px;">إدارة وتعديل التصنيفات الفرعية</h3>
+                
+                <form id="subCategoryForm" onsubmit="saveSubcategory(event)" style="display: grid; gap: 10px; grid-template-columns: 1fr 1fr 1fr 1fr auto; margin-bottom: 20px; align-items: center;">
+                    <select id="admSubSection" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="clinics">مستلزمات العيادات</option>
+                        <option value="labs">مستلزمات المخابر</option>
+                        <option value="maintenance">الصيانة وقطع الغيار</option>
+                    </select>
+                    <input type="text" id="admSubName" placeholder="اسم التصنيف" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="text" id="admSubImage" placeholder="رابط الصورة" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <select id="admSubAvailable" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="true">متوفر</option>
+                        <option value="false">غير متوفر</option>
+                    </select>
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px;">حفظ / إضافة</button>
+                </form>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: right;" id="adminSubsTable">
+                        <thead>
+                            <tr style="background: #f1f1f1; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 12px;">القسم</th>
+                                <th style="padding: 12px;">الصورة</th>
+                                <th style="padding: 12px;">اسم التصنيف</th>
+                                <th style="padding: 12px;">الحالة</th>
+                                <th style="padding: 12px;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminSubsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+<script>
+    // التحقق من تسجيل دخول الأدمن من صفحة الدخول تلقائياً دون إظهار أي مربعات مزعجة
+    window.onload = function() {
+        let isAdminLogged = localStorage.getItem('dentaAdminLogged');
+        if (isAdminLogged !== 'true') {
+            // إذا لم يتم تسجيل الدخول، يعود فوراً لصفحة الدخول
+            window.location.href = 'login.html';
+        }
+    };
+
+    // عند أول زيارة تهيئة البيانات الأساسية في localStorage
+    if (!localStorage.getItem('dentaCoupons')) {
+        localStorage.setItem('dentaCoupons', JSON.stringify({
+            "DENTA10": 10,
+            "WELCOME20": 20
+        }));
+    }
+
+    if (!localStorage.getItem('dentaCategoryDiscounts')) {
+        localStorage.setItem('dentaCategoryDiscounts', JSON.stringify({
+            student: 5,
+            clinic: 10,
+            lab: 15
+        }));
+    }
+
+
+    // إدارة التبويبات (Tabs) والعنوان العلوي
+    function switchTab(tabId, titleText) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.sidebar-menu li').forEach(el => el.classList.remove('active'));
+        
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.classList.add('active');
+
+        // تحديد العنصر النشط في القائمة الجانبية
+        event && event.currentTarget && event.currentTarget.classList.add('active');
+
+        let pageTitle = document.getElementById('pageTitle');
+        if (pageTitle && titleText) {
+            pageTitle.textContent = titleText;
+        }
+
+        if (tabId === 'productsTab') loadProductsAdmin();
+        else if (tabId === 'ordersTab') loadAdminOrders();
+        else if (tabId === 'couponsTab') loadAdminSettings();
+        else if (tabId === 'storeDesignTab') loadStoreDesignSettings();
+        else if (tabId === 'brandsTab') loadBrandsAdmin();
+        else if (tabId === 'subcategoriesTab') renderAdminSubsTable();
+    }
+
+    function goToStore() { 
+        window.location.href = 'index.html'; 
+    }
+
+    // إعدادات الخصومات والأكواد
+    function loadAdminSettings() {
+        let catDiscounts = JSON.parse(localStorage.getItem('dentaCategoryDiscounts')) || {};
+        if(document.getElementById('categoryStudentDiscount')) document.getElementById('categoryStudentDiscount').value = catDiscounts.student || 0;
+        if(document.getElementById('categoryClinicDiscount')) document.getElementById('categoryClinicDiscount').value = catDiscounts.clinic || 0;
+        if(document.getElementById('categoryLabDiscount')) document.getElementById('categoryLabDiscount').value = catDiscounts.lab || 0;
+
+        let coupons = JSON.parse(localStorage.getItem('dentaCoupons')) || {};
+        let tbody = document.getElementById('adminCouponsTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        for (let code in coupons) {
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${code}</b></td>
+                    <td>${coupons[code]}%</td>
+                    <td><button class="btn-danger" onclick="deleteCoupon('${code}')">حذف</button></td>
+                </tr>
+            `;
+        }
+    }
+
+    function addNewCoupon() {
+        let codeInput = document.getElementById('newCouponCode');
+        let percentInput = document.getElementById('newCouponPercent');
+        if (!codeInput || !percentInput) return;
+
+        let code = codeInput.value.trim().toUpperCase();
+        let percent = parseFloat(percentInput.value);
+
+        if (!code || isNaN(percent)) {
+            alert('الرجاء إدخال الكود والنسبة بشكل صحيح.');
+            return;
+        }
+
+        let coupons = JSON.parse(localStorage.getItem('dentaCoupons')) || {};
+        coupons[code] = percent;
+        localStorage.setItem('dentaCoupons', JSON.stringify(coupons));
+        
+        codeInput.value = '';
+        percentInput.value = '';
+        loadAdminSettings();
+        alert('تمت إضافة كود الخصم بنجاح!');
+    }
+
+    function deleteCoupon(code) {
+        let coupons = JSON.parse(localStorage.getItem('dentaCoupons')) || {};
+        delete coupons[code];
+        localStorage.setItem('dentaCoupons', JSON.stringify(coupons));
+        loadAdminSettings();
+    }
+
+    function updateCategoryDiscounts() {
+        let catDiscounts = {
+            student: parseFloat(document.getElementById('categoryStudentDiscount')?.value) || 0,
+            clinic: parseFloat(document.getElementById('categoryClinicDiscount')?.value) || 0,
+            lab: parseFloat(document.getElementById('categoryLabDiscount')?.value) || 0
+        };
+        localStorage.setItem('dentaCategoryDiscounts', JSON.stringify(catDiscounts));
+    }
+
+    // إدارة المنتجات
+    function loadProductsAdmin() {
+        let products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
+        const tbody = document.getElementById('adminProductsTable');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (products.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding: 20px;">لا توجد منتجات مضافة حتى الآن.</td></tr>`;
+            loadProductBrandsDropdown();
+            return;
+        }
+
+        products.forEach((p, idx) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><img src="${p.image || 'https://via.placeholder.com/50'}" width="40" height="40" style="object-fit:contain; background:#f1f5f9; border-radius:4px;"></td>
+                    <td><b>${p.name}</b></td>
+                    <td>${p.sku || '-'}</td>
+                    <td>${p.price} $</td>
+                    <td>${p.category || '-'} / ${p.brand || '-'}</td>
+                    <td>
+                        <button class="btn-primary" style="padding:4px 8px; font-size:11px;" onclick="editProduct(${idx})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-danger" onclick="deleteProduct(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+        loadProductBrandsDropdown();
+    }
+
+    function loadProductBrandsDropdown() {
+        let brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+        const select = document.getElementById('prodBrand');
+        if (!select) return;
+        select.innerHTML = '<option value="">اختر الشركة المصنعة</option>';
+        brands.forEach(b => {
+            let brandName = typeof b === 'string' ? b : (b.name || b.title);
+            if (brandName) {
+                select.innerHTML += `<option value="${brandName}">${brandName}</option>`;
+            }
+        });
+    }
+
+    function saveProduct() {
+        let products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
+        const editIndexInput = document.getElementById('editIndex');
+        const editIdx = editIndexInput ? parseInt(editIndexInput.value) : -1;
+
+        const name = document.getElementById('prodName')?.value.trim();
+        const sku = document.getElementById('prodSku')?.value.trim();
+        const price = parseFloat(document.getElementById('prodPrice')?.value);
+        const oldPrice = document.getElementById('prodOldPrice')?.value ? parseFloat(document.getElementById('prodOldPrice').value) : null;
+        const category = document.getElementById('prodCategory')?.value;
+        const subCategory = document.getElementById('prodSubCategory')?.value; 
+        const brand = document.getElementById('prodBrand')?.value;
+        const image = document.getElementById('prodImage')?.value.trim();
+        const description = document.getElementById('prodDescription')?.value.trim(); 
+
+        if (!name || isNaN(price)) {
+            alert('الرجاء إدخال اسم المنتج والسعر على الأقل!');
+            return;
+        }
+
+        const isBestSeller = document.getElementById('prodBestSeller')?.checked || false;
+        const prodData = { name, sku, price, oldPrice, isBestSeller, category, subCategory, brand, image, description };
+
+        if (isNaN(editIdx) || editIdx === -1) {
+            products.push(prodData);
+        } else {
+            products[editIdx] = prodData;
+            if (editIndexInput) editIndexInput.value = -1;
+            let formTitle = document.getElementById('formTitle');
+            if (formTitle) formTitle.innerHTML = '<i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد';
+        }
+
+        localStorage.setItem('dentaProducts', JSON.stringify(products));
+        clearProductForm();
+        loadProductsAdmin();
+        alert('تم حفظ المنتج بنجاح!');
+    }
+
+    function editProduct(idx) {
+        let products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
+        let p = products[idx];
+        if (!p) return;
+
+        document.getElementById('prodName').value = p.name || '';
+        document.getElementById('prodSku').value = p.sku || '';
+        document.getElementById('prodPrice').value = p.price || '';
+        document.getElementById('prodOldPrice').value = p.oldPrice || '';
+        document.getElementById('prodCategory').value = p.category || '';
+        triggerSubCategories(p.category);
+        document.getElementById('prodSubCategory').value = p.subCategory || '';
+        document.getElementById('prodBrand').value = p.brand || '';
+        document.getElementById('prodImage').value = p.image || '';
+        document.getElementById('prodDescription').value = p.description || '';
+        
+        document.getElementById('editIndex').value = idx;
+        let formTitle = document.getElementById('formTitle');
+        if (formTitle) formTitle.innerHTML = `<i class="fa-solid fa-pen"></i> تعديل المنتج رقم ${idx+1}`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteProduct(idx) {
+        if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+            let products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
+            products.splice(idx, 1);
+            localStorage.setItem('dentaProducts', JSON.stringify(products));
+            loadProductsAdmin();
+        }
+    }
+
+    function clearProductForm() {
+        document.getElementById('prodName').value = '';
+        document.getElementById('prodSku').value = '';
+        document.getElementById('prodPrice').value = '';
+        document.getElementById('prodOldPrice').value = '';
+        document.getElementById('prodImage').value = '';
+        document.getElementById('prodDescription').value = '';
+        document.getElementById('editIndex').value = '-1';
+    }
+
+    // إدارة الطلبات
+    function loadAdminOrders() {
+        let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
+        let tbody = document.getElementById('adminOrdersList');
+        if (!tbody) return;
+
+        if (orders.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding: 20px;">لا توجد طلبات جديدة حتى الآن.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = '';
+        orders.forEach((order, idx) => {
+            let itemsText = order.items ? order.items.map(i => `${i.name} (الكمية: ${i.quantity})`).join(', ') : '';
+            let statusBadge = order.status === 'تم التسليم' 
+                ? `<span style="color: #10b981; font-weight: bold; background: #d1fae5; padding: 3px 8px; border-radius: 4px;">تم التسليم</span>` 
+                : `<span style="color: #f59e0b; font-weight: bold; background: #fef3c7; padding: 3px 8px; border-radius: 4px;">قيد المعالجة</span>`;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight: bold; color: #0b1c3f;">${order.id || idx+1}</td>
+                    <td style="font-size: 13px; color: #555;">${order.date || '-'}</td>
+                    <td style="font-size: 13px;">${itemsText}</td>
+                    <td style="font-weight: bold; color: #0056b3;">$${order.total || 0}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="btn-success" onclick="markOrderDelivered(${idx})"><i class="fa-solid fa-check"></i> تسليم</button>
+                        <button class="btn-danger" onclick="deleteOrder(${idx})"><i class="fa-solid fa-trash"></i> حذف</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function markOrderDelivered(idx) {
+        let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
+        if(orders[idx]) {
+            orders[idx].status = 'تم التسليم';
+            localStorage.setItem('dentaOrders', JSON.stringify(orders));
+            loadAdminOrders();
+        }
+    }
+
+    function deleteOrder(idx) {
+        if (confirm('هل أنت متأكد من رغبتك في حذف هذا الطلب؟')) {
+            let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
+            orders.splice(idx, 1);
+            localStorage.setItem('dentaOrders', JSON.stringify(orders));
+            loadAdminOrders();
+        }
+    }
+
+    // تصميم المتجر والبانر
+    function loadStoreDesignSettings() {
+        let hero = JSON.parse(localStorage.getItem('dentalHeroBanner')) || { title: "", desc: "", image: "" };
+        if(document.getElementById('heroTitle')) document.getElementById('heroTitle').value = hero.title || '';
+        if(document.getElementById('heroDesc')) document.getElementById('heroDesc').value = hero.desc || '';
+        if(document.getElementById('heroImage')) document.getElementById('heroImage').value = hero.image || '';
+    }
+
+    function saveHeroBanner() {
+        const title = document.getElementById('heroTitle')?.value || '';
+        const desc = document.getElementById('heroDesc')?.value || '';
+        const image = document.getElementById('heroImage')?.value || '';
+        localStorage.setItem('dentalHeroBanner', JSON.stringify({ title, desc, image }));
+        alert('تم حفظ إعدادات البانر الرئيسي بنجاح!');
+    }
+
+    // إدارة الشركات (Brands)
+    let editingBrandIdx = null;
+
+    function loadBrandsAdmin() {
+        let brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+        const tbody = document.getElementById('brandsTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        brands.forEach((b, idx) => {
+            let bName = typeof b === 'string' ? b : (b.name || b.title);
+            let bImg = typeof b === 'string' ? '' : (b.image || '');
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><img src="${bImg || 'https://via.placeholder.com/40'}" width="35" height="35" style="object-fit:contain; background:#f1f5f9; border-radius:4px;"></td>
+                    <td><b>${bName}</b></td>
+                    <td>
+                        <button class="btn-warning" onclick="editBrand(${idx})" style="background: #ffc107; color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 5px;">
+                            <i class="fa-solid fa-pen-to-square"></i> تعديل
+                        </button>
+                        <button class="btn-danger" onclick="removeBrand(${idx})"><i class="fa-solid fa-trash"></i> حذف</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function editBrand(idx) {
+        let brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+        let brand = brands[idx];
+        if (!brand) return;
+
+        let bName = typeof brand === 'string' ? brand : (brand.name || brand.title);
+        const nameInput = document.getElementById('newBrandName');
+        if (nameInput) nameInput.value = bName;
+
+        editingBrandIdx = idx;
+        const submitBtn = document.getElementById('addBrandBtn');
+        if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-sync"></i> تحديث الشركة';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addNewBrand() {
+        const bName = document.getElementById('newBrandName')?.value.trim();
+        const fileInput = document.getElementById('newBrandImageFile');
+
+        if (!bName) {
+            alert('الرجاء إدخال اسم الشركة!');
+            return;
+        }
+
+        let brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+
+        if (editingBrandIdx !== null) {
+            const updateExistingBrand = (imgUrl) => {
+                brands[editingBrandIdx] = { 
+                    name: bName, 
+                    image: imgUrl !== undefined ? imgUrl : (brands[editingBrandIdx].image || '')
+                };
+                localStorage.setItem('dentaBrands', JSON.stringify(brands));
+                
+                editingBrandIdx = null;
+                document.getElementById('newBrandName').value = '';
+                if (fileInput) fileInput.value = '';
+                
+                const submitBtn = document.getElementById('addBrandBtn');
+                if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> إضافة الشركة للشريط';
+
+                loadBrandsAdmin();
+                loadProductBrandsDropdown();
+                alert('تم تحديث بيانات الشركة بنجاح!');
+            };
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { updateExistingBrand(e.target.result); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                updateExistingBrand();
+            }
+            return;
+        }
+
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                brands.push({ name: bName, image: e.target.result });
+                localStorage.setItem('dentaBrands', JSON.stringify(brands));
+                document.getElementById('newBrandName').value = '';
+                fileInput.value = '';
+                loadBrandsAdmin();
+                loadProductBrandsDropdown();
+                alert('تمت إضافة الشركة بنجاح!');
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            brands.push({ name: bName, image: '' });
+            localStorage.setItem('dentaBrands', JSON.stringify(brands));
+            document.getElementById('newBrandName').value = '';
+            if (fileInput) fileInput.value = '';
+            loadBrandsAdmin();
+            loadProductBrandsDropdown();
+            alert('تمت إضافة الشركة بنجاح!');
+        }
+    }
+
+    function removeBrand(idx) {
+        let brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+        brands.splice(idx, 1);
+        localStorage.setItem('dentaBrands', JSON.stringify(brands));
+        loadBrandsAdmin();
+        loadProductBrandsDropdown();
+    }
+
+    // إدارة التصنيفات الفرعية (Subcategories)
+    function triggerSubCategories(val) {
+        const subCategorySelect = document.getElementById('prodSubCategory');
+        if (!subCategorySelect) return;
+        subCategorySelect.innerHTML = '<option value="">اختر التصنيف الفرعي</option>';
+
+        if (!val) return;
+
+        let subCategoriesData = JSON.parse(localStorage.getItem('dentaSubcategories')) || {};
+        let searchKey = val.trim();
+        let mappedKey = searchKey;
+        
+        if (searchKey.includes('عياد') || searchKey === 'clinics') mappedKey = 'clinics';
+        else if (searchKey.includes('مخابر') || searchKey.includes('معامل') || searchKey === 'labs') mappedKey = 'labs';
+        else if (searchKey.includes('صيان') || searchKey === 'maintenance') mappedKey = 'maintenance';
+
+        let list = [];
+        if (typeof subCategoriesData === 'object' && !Array.isArray(subCategoriesData) && subCategoriesData !== null) {
+            list = subCategoriesData[searchKey] || subCategoriesData[mappedKey] || [];
+            if (list.length === 0) {
+                Object.keys(subCategoriesData).forEach(k => {
+                    if (Array.isArray(subCategoriesData[k])) {
+                        subCategoriesData[k].forEach(sub => {
+                            const itemSec = (sub.section || k || '').trim();
+                            if (itemSec === searchKey || itemSec === mappedKey || k === mappedKey) {
+                                list.push(sub);
+                            }
+                        });
+                    }
+                });
+            }
+        } else if (Array.isArray(subCategoriesData)) {
+            list = subCategoriesData.filter(sub => {
+                const itemCat = (sub.category || sub.section || '').trim();
+                return itemCat === searchKey || itemCat === mappedKey;
+            });
+        }
+
+        if (Array.isArray(list) && list.length > 0) {
+            list.forEach(sub => {
+                const subName = typeof sub === 'object' ? (sub.name || sub.title || sub.subName) : sub;
+                if (subName) {
+                    subCategorySelect.innerHTML += `<option value="${subName}">${subName}</option>`;
+                }
+            });
+        }
+    }
+
+    function saveSubcategory(event) {
+        event.preventDefault(); 
+
+        const section = document.getElementById('admSubSection')?.value;
+        const name = document.getElementById('admSubName')?.value.trim();
+        const image = document.getElementById('admSubImage')?.value.trim();
+        const available = document.getElementById('admSubAvailable')?.value === 'true';
+
+        if (!name) return;
+
+        let data = JSON.parse(localStorage.getItem('dentaSubcategories')) || { 
+            'clinics': [], 
+            'labs': [], 
+            'maintenance': [] 
+        };
+
+        if (Array.isArray(data)) {
+            data = { 'clinics': [], 'labs': [], 'maintenance': [] };
+        }
+
+        if (!data[section]) data[section] = [];
+        data[section].push({ section, name, image, available });
+
+        localStorage.setItem('dentaSubcategories', JSON.stringify(data));
+        renderAdminSubsTable();
+        document.getElementById('subCategoryForm').reset();
+        alert('تم حفظ وإضافة التصنيف بنجاح!');
+    }
+
+    function renderAdminSubsTable() {
+        const tableBody = document.getElementById('adminSubsTableBody');
+        if (!tableBody) return;
+        
+        tableBody.innerHTML = '';
+        let data = JSON.parse(localStorage.getItem('dentaSubcategories')) || { 
+            'clinics': [], 
+            'labs': [], 
+            'maintenance': [] 
+        };
+
+        let allSubs = [];
+        if (Array.isArray(data)) {
+            data.forEach((item, index) => {
+                allSubs.push({ ...item, sectionKey: 'clinics', originalIndex: index });
+            });
+        } else {
+            Object.keys(data).forEach(sectionKey => {
+                if (Array.isArray(data[sectionKey])) {
+                    data[sectionKey].forEach((item, index) => {
+                        allSubs.push({ ...item, sectionKey, originalIndex: index });
+                    });
+                }
+            });
+        }
+
+        if (allSubs.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#777;">لا توجد تصنيفات مضافة حالياً</td></tr>`;
+            return;
+        }
+
+        allSubs.forEach((item) => {
+            let sectionName = item.section === 'labs' || item.sectionKey === 'labs' ? 'مستلزمات المخابر' : item.section === 'maintenance' || item.sectionKey === 'maintenance' ? 'الصيانة' : 'مستلزمات العيادات';
+            tableBody.innerHTML += `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px;">${sectionName}</td>
+                    <td style="padding: 12px;"><img src="${item.image || 'https://via.placeholder.com/40'}" width="40" style="border-radius:4px;"></td>
+                    <td style="padding: 12px;">${item.name}</td>
+                    <td style="padding: 12px;">${item.available !== false ? '<span style="color:green;">متوفر</span>' : '<span style="color:red;">غير متوفر</span>'}</td>
+                    <td style="padding: 12px;">
+                        <button onclick="deleteSubcategory('${item.sectionKey}', ${item.originalIndex})" class="btn-danger">حذف</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteSubcategory(sectionKey, index) {
+        if (confirm('هل أنت متأكد من حذف هذا التصنيف؟')) {
+            let data = JSON.parse(localStorage.getItem('dentaSubcategories'));
+            if (data && data[sectionKey]) {
+                data[sectionKey].splice(index, 1);
+                localStorage.setItem('dentaSubcategories', JSON.stringify(data));
+                renderAdminSubsTable();
+            }
+        }
+    }
+
+    // ربط الأحداث عند اكتمال تحميل الصفحة
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelect = document.getElementById('prodCategory');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', function() {
+                triggerSubCategories(this.value);
+            });
+        }
+
+        loadProductsAdmin();
+        loadProductBrandsDropdown();
+        renderAdminSubsTable();
+    });
+    
+
+    document.addEventListener("DOMContentLoaded", function() {
+    let sidebar = document.querySelector('.sidebar') || document.querySelector('aside') || document.querySelector('.admin-sidebar');
+    let menuBtn = document.querySelector('.mobile-menu-btn');
+
+    // إذا لم يكن الزر موجوداً في الـ HTML، نقوم بإضافته برمجياً
+    if (!menuBtn) {
+        menuBtn = document.createElement('button');
+        menuBtn.className = 'mobile-menu-btn';
+        menuBtn.innerHTML = '☰ القائمة';
+        document.body.appendChild(menuBtn);
+    }
+
+    if (sidebar && menuBtn) {
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('show-sidebar');
+            
+            if (sidebar.classList.contains('show-sidebar')) {
+                menuBtn.innerHTML = '✕ إغلاق';
+            } else {
+                menuBtn.innerHTML = '☰ القائمة';
+            }
+        });
+
+        // إغلاق القائمة عند الضغط في أي مكان خارجها على الجوال
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768 && !sidebar.contains(event.target) && event.target !== menuBtn) {
+                sidebar.classList.remove('show-sidebar');
+                menuBtn.innerHTML = '☰ القائمة';
+            }
+        });
+    }
+});
+
+</script>
+
+</body>
+</html>

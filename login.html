@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">تسجيل الدخول - Denta Store</title>
+    
+    <!-- 1. رابط الخط -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 2. تنسيق الخط الصحيح -->
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        /* الشريط العلوي الأزرق */
+        .top-bar {
+            background-color: #0b1c3d;
+            color: #fff;
+            padding: 8px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            position: relative;
+            height: 40px;
+        }
+        .lang-select {
+            background: #0056b3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        /* شريط اللوجو الأبيض */
+        header {
+            background-color: #ffffff;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .logo-area img {
+            height: 65px;
+            width: auto;
+            object-fit: contain;
+        }
+        .welcome-text {
+            color: #0b1c3d;
+            font-weight: 800;
+            font-size: 18px;
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+        
+        .back-home {
+            color: #0b1c3d;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            background: transparent;
+            border: none;
+            white-space: nowrap;
+        }
+        .back-home:hover {
+            color: #0056b3;
+        }
+
+        /* حاوية التصميم */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+        @media(max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eaeaea;
+        }
+
+        .card h2 {
+            color: #0b1c3d;
+            margin-bottom: 20px;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #0056b3;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0,86,179,0.15);
+        }
+
+        .btn-submit {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #004085;
+        }
+
+        .side-card h3 {
+            color: #0b1c3d;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+        }
+        .side-info-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .side-info-item i {
+            color: #0056b3;
+            margin-top: 3px;
+        }
+
+        /* لوحة حساب العميل والمسترجعات */
+        .dashboard-box {
+            display: none;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: #0056b3;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .item-card-dash {
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            float: left;
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-text { display: none; }
+            header { flex-direction: row-reverse; justify-content: space-between; padding: 10px; }
+            .logo-area img { max-width: 65px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- الشريط العلوي الأزرق -->
+<div class="top-bar">
+    <div>
+        <select id="langSwitch" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية (Arabic)</option>
+            <option value="tr">Türkçe (Turkish)</option>
+        </select>
+    </div>
+</div>
+
+<!-- شريط الهيدر -->
+<header>
+    <div class="logo-area">
+        <img src="logo.jpg" alt="DENTA STORE Logo">
+    </div>
+    
+    <div class="welcome-text" id="welcomeMsg">أهلاً بك في Denta Store</div>
+    
+    <a href="index.html" class="back-home">
+        <span id="backText">العودة للمتجر</span> <i class="fa-solid fa-arrow-left" id="backArrowIcon"></i>
+    </a>
+</header>
+
+<!-- المحتوى الرئيسي -->
+<main class="main-container">
+
+    <!-- نموذج تسجيل الدخول -->
+    <section class="card" id="loginSection">
+        <h2 id="formHeader">تسجيل الدخول إلى حسابك</h2>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label id="lblEmail">البريد الإلكتروني</label>
+                <input type="email" id="loginEmail" placeholder="example@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label id="lblPassword">كلمة المرور</label>
+                <input type="password" id="loginPassword" placeholder="********" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnLoginText" style="margin-top: 10px;">تسجيل الدخول</button>
+        </form>
+        
+        <div style="margin-top: 20px; text-align: center; font-size: 13px;">
+            <span id="noAccountText">ليس لديك حساب؟</span> <a href="register.html" style="color: #0056b3; font-weight: bold;" id="registerLinkText">سجل حساب جديد الآن</a>
+        </div>
+    </section>
+
+    <!-- لوحة حساب العميل (تظهر تلقائياً بعد تسجيل الدخول للعميل العادي) -->
+    <section class="card dashboard-box" id="customerDashboard">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 12px;">
+            <h2 id="dashWelcome" style="margin: 0; border: none; padding: 0;">مرحباً بك</h2>
+            <button class="logout-btn" onclick="logout()" id="btnLogout">تسجيل الخروج</button>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('orders', this)" id="tabOrdersBtn">طلباتي</button>
+            <button class="tab-btn" onclick="switchTab('coupons', this)" id="tabCouponsBtn">الكوبونات والأكواد</button>
+            <button class="tab-btn" onclick="switchTab('returns', this)" id="tabReturnsBtn">المسترجعات</button>
+        </div>
+
+        <!-- تبويب طلباتي -->
+        <div class="tab-content active" id="ordersTab">
+            <div id="ordersListContainer">
+                <p style="color: #666; font-size: 13px;" id="noOrdersText">ليس لديك أي طلبات سابقة حتى الآن.</p>
+            </div>
+        </div>
+
+        <!-- تبويب الكوبونات -->
+        <div class="tab-content" id="couponsTab">
+            <div class="item-card-dash">
+                <strong style="color: #0056b3;">DENTA5</strong>
+                <p style="margin: 5px 0 0 0; font-size: 13px;" id="couponDesc1">خصم 5% مخصص لطلباتك الأولى عبر الحساب.</p>
+            </div>
+            <div class="item-card-dash" id="specialCouponBox" style="display:none;">
+                <strong style="color: #0ca678;" id="specialCouponCode">VIP10</strong>
+                <p style="margin: 5px 0 0 0; font-size: 13px;" id="couponDesc2">كود خصم خاص لحسابك بناءً على صفتك المسجلة.</p>
+            </div>
+        </div>
+
+        <!-- تبويب المسترجعات -->
+        <div class="tab-content" id="returnsTab">
+            <p style="font-size: 12px; color: #555; margin-bottom: 15px;" id="returnPolicyNote">ملاحظة: يمكنك تقديم طلب استرجاع خلال 3 أيام فقط من تاريخ شراء القطعة.</p>
+            
+            <form onsubmit="submitReturnRequest(event)">
+                <div class="form-group">
+                    <label id="lblReturnOrder">رقم الطلب أو اسم القطعة المراد استرجاعها *</label>
+                    <input type="text" id="returnItemName" placeholder="مثال: طلب رقم #1024 أو جهاز تعقيم" required>
+                </div>
+                <div class="form-group">
+                    <label id="lblReturnDate">تاريخ الشراء *</label>
+                    <input type="date" id="returnDate" required>
+                </div>
+                <div class="form-group">
+                    <label id="lblReturnImage">صورة القطعة (أو مشكلة المنتج) *</label>
+                    <input type="file" id="returnImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label id="lblReturnReason">سبب الاسترجاع بالتفصيل *</label>
+                    <textarea id="returnReason" rows="3" placeholder="اشرح سبب رغبتك في الاسترجاع..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" id="btnSubmitReturn">إرسال طلب الاسترجاع</button>
+            </form>
+        </div>
+    </section>
+
+    <aside class="card side-card">
+        <h3 id="sideHeader"><i class="fa-solid fa-shield-halved"></i> الأمان ودعم العملاء</h3>
+        
+        <div class="side-info-item">
+            <i class="fa-solid fa-lock"></i>
+            <div>
+                <strong id="s1Title">دخول آمن ومشفّر:</strong>
+                <div id="s1Desc">نظام تسجيل دخول موحد ومخصص لحماية بياناتك الشخصية وحسابك في المتجر.</div>
+            </div>
+        </div>
+
+        <div class="side-info-item">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <div>
+                <strong id="s2Title">متابعة المسترجعات بسهولة:</strong>
+                <div id="s2Desc">يمكنك متابعة حالة طلبات الإرجاع المتاحة خلال مهلة الـ 3 أيام المحددة للشراء.</div>
+            </div>
+        </div>
+    </aside>
+
+</main>
+
+<script>
+    const translations = {
+        ar: {
+            pageTitle: "تسجيل الدخول - Denta Store",
+            backText: "العودة للمتجر",
+            welcomeMsg: "أهلاً بك في Denta Store",
+            formHeader: "تسجيل الدخول إلى حسابك",
+            lblEmail: "البريد الإلكتروني",
+            lblPassword: "كلمة المرور",
+            btnLoginText: "تسجيل الدخول",
+            noAccountText: "ليس لديك حساب؟",
+            registerLinkText: "سجل حساب جديد الآن",
+            sideHeader: "الأمان ودعم العملاء",
+            s1Title: "دخول آمن ومشفّر:", s1Desc: "نظام تسجيل دخول موحد ومخصص لحماية بياناتك الشخصية.",
+            s2Title: "متابعة المسترجعات بسهولة:", s2Desc: "يمكنك متابعة حالة طلبات الإرجاع المتاحة خلال مهلة الـ 3 أيام.",
+            tabOrdersBtn: "طلباتي",
+            tabCouponsBtn: "الكوبونات والأكواد",
+            tabReturnsBtn: "المسترجعات",
+            btnLogout: "تسجيل الخروج",
+            noOrdersText: "ليس لديك أي طلبات سابقة حتى الآن.",
+            couponDesc1: "خصم 5% مخصص لطلباتك الأولى عبر الحساب.",
+            returnPolicyNote: "ملاحظة: يمكنك تقديم طلب استرجاع خلال 3 أيام فقط من تاريخ شراء القطعة.",
+            lblReturnOrder: "رقم الطلب أو اسم القطعة المراد استرجاعها *",
+            lblReturnDate: "تاريخ الشراء *",
+            lblReturnImage: "صورة القطعة (أو مشكلة المنتج) *",
+            lblReturnReason: "سبب الاسترجاع بالتفصيل *",
+            btnSubmitReturn: "إرسال طلب الاسترجاع"
+        },
+        tr: {
+            pageTitle: "Giriş Yap - Denta Store",
+            backText: "Mağazaya Dön",
+            welcomeMsg: "Denta Store'a Hoş Geldiniz",
+            formHeader: "Hesabınıza Giriş Yapın",
+            lblEmail: "E-posta",
+            lblPassword: "Şifre",
+            btnLoginText: "Giriş Yap",
+            noAccountText: "Hesabınız yok mu?",
+            registerLinkText: "Hemen yeni hesap oluşturun",
+            sideHeader: "Güvenlik ve Destek",
+            s1Title: "Güvenli Giriş:", s1Desc: "Kişisel verilerinizi korumak için güvenli sistem.",
+            s2Title: "İadeleri Takip Edin:", s2Desc: "3 günlük süre içinde iade talebinde bulunabilirsiniz.",
+            tabOrdersBtn: "Siparişlerim",
+            tabCouponsBtn: "Kuponlarım",
+            tabReturnsBtn: "İadeler",
+            btnLogout: "Çıkış Yap",
+            noOrdersText: "Henüz geçmiş siparişiniz bulunmamaktadır.",
+            couponDesc1: "Hesabınıza özel ilk sipariş indirim kuponu.",
+            returnPolicyNote: "Not: Satın alma tarihinden itibaren yalnızca 3 gün içinde iade talebinde bulunabilirsiniz.",
+            lblReturnOrder: "Sipariş Numarası veya Ürün Adı *",
+            lblReturnDate: "Satın Alma Tarihi *",
+            lblReturnImage: "Ürün Fotoğrafı *",
+            lblReturnReason: "Detaylı İade Nedeni *",
+            btnSubmitReturn: "İade Talebini Gönder"
+        }
+    };
+
+    function changeLanguage(lang) {
+        document.getElementById('htmlRoot').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        document.getElementById('htmlRoot').setAttribute('lang', lang);
+        document.getElementById('backArrowIcon').className = lang === 'ar' ? 'fa-solid fa-arrow-left' : 'fa-solid fa-arrow-right';
+
+        let t = translations[lang];
+        document.getElementById('pageTitle').innerText = t.pageTitle;
+        document.getElementById('backText').innerText = t.backText;
+        document.getElementById('welcomeMsg').innerText = t.welcomeMsg;
+        document.getElementById('formHeader').innerText = t.formHeader;
+        document.getElementById('lblEmail').innerText = t.lblEmail;
+        document.getElementById('lblPassword').innerText = t.lblPassword;
+        document.getElementById('btnLoginText').innerText = t.btnLoginText;
+        document.getElementById('noAccountText').innerText = t.noAccountText;
+        document.getElementById('registerLinkText').innerText = t.registerLinkText;
+        document.getElementById('sideHeader').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ` + t.sideHeader;
+        document.getElementById('s1Title').innerText = t.s1Title;
+        document.getElementById('s1Desc').innerText = t.s1Desc;
+        document.getElementById('s2Title').innerText = t.s2Title;
+        document.getElementById('s2Desc').innerText = t.s2Desc;
+        
+        document.getElementById('tabOrdersBtn').innerText = t.tabOrdersBtn;
+        document.getElementById('tabCouponsBtn').innerText = t.tabCouponsBtn;
+        document.getElementById('tabReturnsBtn').innerText = t.tabReturnsBtn;
+        document.getElementById('btnLogout').innerText = t.btnLogout;
+        document.getElementById('noOrdersText').innerText = t.noOrdersText;
+        document.getElementById('couponDesc1').innerText = t.couponDesc1;
+        document.getElementById('returnPolicyNote').innerText = t.returnPolicyNote;
+        document.getElementById('lblReturnOrder').innerText = t.lblReturnOrder;
+        document.getElementById('lblReturnDate').innerText = t.lblReturnDate;
+        document.getElementById('lblReturnImage').innerText = t.lblReturnImage;
+        document.getElementById('lblReturnReason').innerText = t.lblReturnReason;
+        document.getElementById('btnSubmitReturn').innerText = t.btnSubmitReturn;
+
+        localStorage.setItem('dentaLang', lang);
+    }
+
+    window.onload = function() {
+        let savedLang = localStorage.getItem('dentaLang') || 'ar';
+        document.getElementById('langSwitch').value = savedLang;
+        changeLanguage(savedLang);
+
+        // التحقق إذا كان المستخدم مسجل دخول مسبقاً
+        let activeUser = localStorage.getItem('dentaActiveUser');
+        if (activeUser) {
+            let userObj = JSON.parse(activeUser);
+            showDashboard(userObj);
+        }
+    };
+
+ function handleLogin(event) {
+        event.preventDefault();
+        let email = document.getElementById('loginEmail').value.trim();
+        let password = document.getElementById('loginPassword').value.trim();
+
+        // بيانات الأدمن الجديدة المحددة
+        if (email === "dentastore00@gmail.com" && password === "Denta.store.mohamed") {
+            localStorage.setItem('dentaAdminLogged', 'true');
+            window.location.href = 'admin.html'; // توجيه الأدمن لصفحة لوحة التحكم مباشرة
+            return;
+        }
+
+        // البحث عن بيانات العميل المخزنة مسبقاً في النظام
+        let savedUserJson = localStorage.getItem('dentaUserInfo');
+        let userToSave;
+
+        if (savedUserJson) {
+            let user = JSON.parse(savedUserJson);
+            if (!user.email || user.email.toLowerCase() === email.toLowerCase()) {
+                userToSave = user;
+            }
+        }
+
+        // إذا لمطابقة العميل أو في حال لم يكن مخزناً، ننشئ أو نعتمد بياناته
+        if (!userToSave) {
+            userToSave = {
+                name: email.split('@')[0],
+                email: email,
+                phone: "0500000000",
+                type: "normal"
+            };
+            localStorage.setItem('dentaUserInfo', JSON.stringify(userToSave));
+        }
+
+        // حفظ المستخدم الحالي في مفتاح الدخول المعتمد والانتقال فوراً لصفحة الحساب
+        localStorage.setItem('dentaActiveUser', JSON.stringify(userToSave));
+        window.location.href = 'account.html';
+    }
+</script>
+
+</body>
+</html>
