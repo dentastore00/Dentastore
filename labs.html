@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">DENTA STORE - مستلزمات المخابر</title>
+    <title data-key="labsPageTitle">DENTA STORE - مستلزمات المخابر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -12,10 +12,17 @@
         body { background-color: #f9f9f9; color: #333; }
         
         /* الشريط العلوي الثابت */
-        .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; position: relative !important; height: 40px !important; }
         .top-bar div { display: flex; gap: 20px; align-items: center; }
         .currency-selector { background: #0056b3; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer; outline: none; }
         
+        #langSelect {
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+        }
+
         /* الهيدر الرئيسي */
         header { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 15px 3%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo-area img { height: 65px; width: auto; object-fit: contain; }
@@ -85,85 +92,33 @@
             .features-bar { flex-direction: column; gap: 15px; }
         }
 
-            
-    /* منع التمرير الأفقي للصفحة ككل */
-    html, body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-    }
+        html, body { overflow-x: hidden !important; width: 100% !important; }
+        .nav-links { display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+        .nav-links li { white-space: nowrap !important; flex-shrink: 0 !important; }
 
-    /* جعل القائمة قابلة للتمرير */
-    .nav-links {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    /* منع العناصر من النزول لسطر جديد */
-    .nav-links li {
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
-
-
-       /* 1. حذف زر "كل الأقسام" الأزرق الكبير */
-    .all-departments, 
-    [onclick*="displayProducts('all')"] {
-        display: none !important;
-    }
-
-    /* 2. حذف قائمة "كل الأقسام" الموجودة داخل شريط البحث بدقة */
-    .search-category-select {
-        display: none !important;
-    }
-
-    
-    /* إخفاء النصوص داخل الشريط العلوي الأزرق وإبقاء الأيقونات فقط ليكون نحيفاً */
-    header span[id^="txt"],
-    .top-bar span,
-    .top-bar p {
-        display: none !important;
-    }
-
-    /* تقليل مساحات الشريط العلوي ليصبح نحيفاً وثابت الإرتفاع على الجوال واللابتوب */
-    .top-bar, 
-    header > div:first-child {
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        min-height: unset !important;
-    }
-
-      /* 3. ضبط الشريط العلوي وتثبيت زر البحث يميناً واللغة يساراً */
-    .top-bar {
-        position: relative !important;
-        display: flex !important;
-        align-items: center !important;
-        height: 40px !important;
-        padding: 5px 15px !important;
-    }
-
-    /* تثبيت زر اللغة في أقصى اليسار */
-    #langSelect {
-        position: absolute !important;
-        left: 10px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-    }
-
-    /* تثبيت أيقونة البحث في أقصى اليمين */
-    .mobile-search-icon {
-        position: absolute !important;
-        right: 15px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 1000;
-    }
+        .all-departments, [onclick*="displayProducts('all')"] { display: none !important; }
+        .search-category-select { display: none !important; }
+        header span[id^="txt"], .top-bar span, .top-bar p { display: none !important; }
+        .top-bar, header > div:first-child { padding-top: 6px !important; padding-bottom: 6px !important; min-height: unset !important; }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
-   
+    <!-- الشريط العلوي الثابت -->
+    <div class="top-bar">
+        <div>
+            <span><i class="fa-solid fa-headset"></i> دعم فني متخصص</span>
+            <span><i class="fa-solid fa-shield-halved"></i> جودة أصلية 100%</span>
+            <span><i class="fa-solid fa-truck"></i> توصيل لجميع المحافظات</span>
+        </div>
+        <div>
+            <span><i class="fa-solid fa-phone"></i> +963 987 654 321</span>
+            <select id="langSelect" class="currency-selector" onchange="changeLanguage(this.value)">
+                <option value="ar">العربية</option>
+                <option value="tr">Türkçe</option>
+            </select>
+        </div>
+    </div>
 
     <!-- الهيدر الرئيسي الثابت -->
     <header>
@@ -179,30 +134,31 @@
                 <option value="maintenance">الصيانة</option>
             </select>
             <div class="search-bar">
-                <input type="text" placeholder="ابحث عن منتج، شركة أو تصنيف...">
+                <input type="text" id="searchInput" placeholder="ابحث عن منتج، شركة أو تصنيف..." data-key="searchPlaceholder">
                 <button><i class="fa-solid fa-search"></i></button>
             </div>
         </div>
-
-      
+        
         <div class="header-icons">
-          <a href="wishlist.html" style="text-decoration: none; color: inherit; display: inline-block; text-align: center; cursor: pointer;">
-    <div style="cursor: pointer;">
-        <i class="fa-solid fa-heart" style="color: #0056b3; display: block; font-size: 20px; margin-bottom: 3px;"></i>
-        <span id="txtWishlist">المفضلة</span>
-        <span class="badge" id="wishlistCount">0</span>
-    </div>
-</a>
-              
+            <a href="wishlist.html" style="text-decoration: none; color: inherit; display: inline-block; text-align: center; cursor: pointer;">
+                <div style="cursor: pointer;">
+                    <i class="fa-solid fa-heart" style="color: #0056b3; display: block; font-size: 20px; margin-bottom: 3px;"></i>
+                    <span id="txtWishlist" data-key="navWishlist">المفضلة</span>
+                    <span class="badge" id="wishlistCount">0</span>
+                </div>
+            </a>
+            
             <a href="cart.html" style="text-decoration: none; color: inherit;">
                 <div style="cursor: pointer; display: inline-block; text-align: center;">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 20px; margin-bottom: 3px; display: block;"></i><span id="txtCart">السلة</span>
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 20px; margin-bottom: 3px; display: block;"></i>
+                    <span id="txtCart" data-key="navCart">السلة</span>
                     <span class="badge" id="cartCount">0</span>
                 </div>
             </a>
             <a href="login.html" style="text-decoration: none; color: inherit; display: inline-block;">
                 <div style="cursor: pointer; text-align: center;">
-                    <i class="fa-solid fa-user" style="font-size: 20px; margin-bottom: 3px; display: block;"></i> <span id="txtAccount">حسابي</span>
+                    <i class="fa-solid fa-user" style="font-size: 20px; margin-bottom: 3px; display: block;"></i> 
+                    <span id="txtAccount" data-key="navAccount">حسابي</span>
                 </div>
             </a>
         </div>
@@ -210,198 +166,270 @@
 
     <!-- شريط التنقل -->
     <nav class="main-nav">
-        <div class="all-departments"><i class="fa-solid fa-bars"></i> كل الأقسام</div>
+        <div class="all-departments"><i class="fa-solid fa-bars"></i> <span data-key="allDepartments">كل الأقسام</span></div>
         <ul class="nav-links">
-            <li><a href="index.html">الرئيسية</a></li>
-            <li><a href="#">الشركات</a></li>
-            <li><a href="#">العروض</a></li>
-            <li><a href="#">الأكثر مبيعاً</a></li>
-            <li><a href="#">جديد المنتجات</a></li>
-            <li><a href="#">خدماتنا</a></li>
-            <li><a href="#" onclick="openModal('aboutModal'); return false;" data-key="navAbout">من نحن</a></li>
-            <li><a href="javascript:void(0);" onclick="openContactModal()" data-key="navContact" style="text-decoration: none; color: inherit;">تواصل معنا</a></li>
+            <li><a href="index.html" data-key="navHome">الرئيسية</a></li>
         </ul>
     </nav>
 
     <!-- مسار التنقل (Breadcrumb) -->
     <div class="breadcrumb-section">
-        <a href="index.html">الرئيسية</a>
+        <a href="index.html" data-key="navHome">الرئيسية</a>
         <i class="fa-solid fa-chevron-left" style="font-size: 10px;"></i>
-        <span>مستلزمات المخابر</span>
+        <span data-key="labsBreadcrumb">مستلزمات المخابر</span>
     </div>
 
     <!-- بانر القسم العلوي -->
-<section class="category-hero" style="background: url('section2.jpg') no-repeat center center; background-size: cover; position: relative; height: 320px; border-radius: 8px; margin-bottom: 30px;">
-    <div class="category-hero-text" style="position: absolute; left: 50px; top: 50%; transform: translateY(-50%); text-align: right; color: #0f172a; max-width: 450px; padding: 0;">
-        <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 10px; color: #0f172a;">مستلزمات المخابر</h1>
-        <p style="font-size: 16px; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 500;">كل ما تحتاجه لتجهيز المخابر بدقة وعناية - منتجات أصلية من أفضل العلامات التجارية.</p>
-    </div>
-</section>
+    <section class="category-hero" style="background: url('section2.jpg') no-repeat center center; background-size: cover; position: relative; height: 320px; border-radius: 8px; margin-bottom: 30px;">
+        <div class="category-hero-text" style="position: absolute; left: 50px; top: 50%; transform: translateY(-50%); text-align: right; color: #0f172a; max-width: 450px; padding: 0;">
+            <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 10px; color: #0f172a;" data-key="labsHeroTitle">مستلزمات المخابر</h1>
+            <p style="font-size: 16px; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 500;" data-key="labsHeroDesc">كل ما تحتاجه لتجهيز المخابر بدقة وعناية - منتجات أصلية من أفضل العلامات التجارية.</p>
+        </div>
+    </section>
 
     <!-- عنوان تصفح التصنيفات -->
-    <h2 class="section-heading-center">تصفح التصنيفات</h2>
-<div class="subcategories-container" id="subcategoriesContainer">
-    <!-- سيتم تعبئة التصنيفات تلقائياً -->
-</div>
+    <h2 class="section-heading-center" data-key="browseCategoriesHeading">تصفح التصنيفات</h2>
 
     <!-- شبكة التصنيفات الفرعية للمخابر -->
-    <div class="subcategories-container">
-
-       <div id="subcategoriesContainer" class="row">
-    <!-- سيتم تعبئتها تلقائياً من لوحة التحكم -->
-</div>
+    <div class="subcategories-container" id="subcategoriesContainer">
+        <!-- سيتم تعبئة التصنيفات تلقائياً -->
     </div>
 
-   
+    <!-- ملف الترجمة العام -->
+    <script src="lang.js"></script>
 
-   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. جلب البيانات من المفاتيح الموحدة
-        const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
-        const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
-        
-        // 2. تحديث عداد المفضلة
-        const wBadge = document.getElementById('wishlistCount');
-        if (wBadge) wBadge.textContent = wishlist.length;
+    <script>
+        if (typeof translations === 'undefined') { window.translations = {}; }
+        if (!translations['tr']) translations['tr'] = {};
+        if (!translations['ar']) translations['ar'] = {};
 
-        // 3. تحديث عداد السلة (حساب مجموع الكميات)
-        const cBadge = document.getElementById('cartCount');
-        if (cBadge) {
-            const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-            cBadge.textContent = totalQty;
-        }
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. جلب البيانات من المفاتيح الموحدة
-        const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
-        const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
-        
-        // 2. تحديث عداد المفضلة
-        const wBadge = document.getElementById('wishlistCount');
-        if (wBadge) wBadge.textContent = wishlist.length;
-
-        // 3. تحديث عداد السلة
-        const cBadge = document.getElementById('cartCount');
-        if (cBadge) {
-            const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-            cBadge.textContent = totalQty;
-        }
-
-        // 4. استدعاء تصنيفات المخابر (هذا هو التعديل المطلوب)
-        loadDynamicSubcategories('labs'); 
-    });
-
-    function loadDynamicSubcategories(sectionKey) {
-        const container = document.getElementById('subcategoriesContainer');
-        if (!container) return;
-
-        let allSubcategories = JSON.parse(localStorage.getItem('dentaSubcategories')) || {
-            'clinics': [],
-            'labs': [],
-            'maintenance': []
+        const extraTranslations = {
+            ar: {
+                labsPageTitle: "DENTA STORE - مستلزمات المخابر",
+                navWishlist: "المفضلة",
+                navCart: "السلة",
+                navAccount: "حسابي",
+                allDepartments: "كل الأقسام",
+                navHome: "الرئيسية",
+                navBrands: "الشركات",
+                navOffers: "العروض",
+                navBestSellers: "الأكثر مبيعاً",
+                navNewProducts: "جديد المنتجات",
+                navServices: "خدماتنا",
+                navAbout: "من نحن",
+                navContact: "تواصل معنا",
+                labsBreadcrumb: "مستلزمات المخابر",
+                labsHeroTitle: "مستلزمات المخابر",
+                labsHeroDesc: "كل ما تحتاجه لتجهيز المخابر بدقة وعناية - منتجات أصلية من أفضل العلامات التجارية.",
+                browseCategoriesHeading: "تصفح التصنيفات",
+                searchPlaceholder: "ابحث عن منتج، شركة أو تصنيف...",
+                noSubcategories: "لا توجد تصنيفات مضافة حالياً.",
+                notAvailable: "غير متوفر حالياً",
+                notAvailableAlert: "عذراً، هذا التصنيف غير متوفر حالياً.",
+                modalAboutTitle: "من نحن",
+                modalAboutDesc: "شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.",
+                modalAboutCloseBtn: "إغلاق",
+                contactTitle: "تواصل معنا",
+                contactDesc: "يسعدنا تواصلكم معنا عبر الوسائل التالية:",
+                whatsappText: "واتساب"
+            },
+            tr: {
+                labsPageTitle: "DENTA STORE - Laboratuvar Malzemeleri",
+                navWishlist: "Favoriler",
+                navCart: "Sepet",
+                navAccount: "Hesabım",
+                allDepartments: "Tüm Kategoriler",
+                navHome: "Ana Sayfa",
+                navBrands: "Markalar",
+                navOffers: "Kampanyalar",
+                navBestSellers: "Çok Satanlar",
+                navNewProducts: "Yeni Ürünler",
+                navServices: "Hizmetlerimiz",
+                navAbout: "Hakkımızda",
+                navContact: "İletişim",
+                labsBreadcrumb: "Laboratuvar Malzemeleri",
+                labsHeroTitle: "Laboratuvar Malzemeleri",
+                labsHeroDesc: "Laboratuvarınızı hassasiyet ve özenle donatmak için ihtiyacınız olan her şey - en iyi markalardan orijinal ürünler.",
+                browseCategoriesHeading: "Kategorilere Göz At",
+                searchPlaceholder: "Ürün, marka veya kategori ara...",
+                noSubcategories: "Şu anda eklenmiş kategori bulunmuyor.",
+                notAvailable: "Şu anda mevcut değil",
+                notAvailableAlert: "Üzgünüz, bu kategori şu anda mevcut değil.",
+                modalAboutTitle: "Hakkımızda",
+                modalAboutDesc: "Diş hekimliği malzemeleri ve ekipmanları tedariğinde öncü şirket, T.C. Sağlık Bakanlığı onaylıdır. Merkezimiz İstanbul'da olup, tıbbi başarınızı desteklemek için dünyanın çoğu ülkesine uzanan geniş bir şube ağımız bulunmaktadır.",
+                modalAboutCloseBtn: "Kapat",
+                contactTitle: "İletişim",
+                contactDesc: "Bizimle aşağıdaki yollarla iletişime geçebilirsiniz:",
+                whatsappText: "WhatsApp"
+            }
         };
 
-        let currentList = allSubcategories[sectionKey] || [];
-        container.innerHTML = '';
-
-        if (currentList.length === 0) {
-            container.innerHTML = `<p style="text-align:center; width:100%; color:#777; padding:20px;">لا توجد تصنيفات مضافة حالياً.</p>`;
-            return;
-        }
-
-        currentList.forEach(sub => {
-            let card = document.createElement('div');
-            card.className = 'subcat-card';
-
-            if (sub.available === false || sub.available === 'false') {
-                card.style.opacity = '0.7';
-                card.innerHTML = `
-                    <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
-                    <h3>${sub.name}</h3>
-                    <span style="color: #ff4d4d; font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">غير متوفر حالياً</span>
-                `;
-                card.onclick = function() {
-                    alert('عذراً، هذا التصنيف غير متوفر حالياً.');
-                };
-            } else {
-                card.innerHTML = `
-                    <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
-                    <h3>${sub.name}</h3>
-                    <i class="fa-solid fa-chevron-left subcat-arrow"></i>
-                `;
-                // هذا هو رابط الانتقال لصفحة المنتجات
-                card.onclick = function() {
-                    window.location.href = 'product.html?category=' + encodeURIComponent(sub.name);
-                };
+        for (let lang in extraTranslations) {
+            for (let key in extraTranslations[lang]) {
+                if (!translations[lang][key]) {
+                    translations[lang][key] = extraTranslations[lang][key];
+                }
             }
-            container.appendChild(card);
-        });
-    }
-</script>
-
-<script>
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // إغلاق النافذة عند الضغط في أي مكان خارجها
-    window.onclick = function(event) {
-        if (event.target.id === 'aboutModal' || event.target.id === 'servicesModal') {
-            event.target.style.display = 'none';
         }
+
+        function changeLanguage(lang) {
+            localStorage.setItem('dentaLang', lang);
+            applyLanguage(lang);
+            loadDynamicSubcategories('labs');
+        }
+
+        function applyLanguage(lang) {
+            if (!translations[lang]) return;
+
+            const htmlRoot = document.getElementById('htmlRoot');
+            htmlRoot.setAttribute('lang', lang);
+            htmlRoot.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && translations[lang]['searchPlaceholder']) {
+                searchInput.placeholder = translations[lang]['searchPlaceholder'];
+            }
+
+            const langSelect = document.getElementById('langSelect');
+            if (langSelect) langSelect.value = lang;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const savedLang = localStorage.getItem('dentaLang') || 'ar';
+            applyLanguage(savedLang);
+
+            const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
+            const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
+            
+            const wBadge = document.getElementById('wishlistCount');
+            if (wBadge) wBadge.textContent = wishlist.length;
+
+            const cBadge = document.getElementById('cartCount');
+            if (cBadge) {
+                cBadge.textContent = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            }
+
+            loadDynamicSubcategories('labs'); 
+        });
+
+        function loadDynamicSubcategories(sectionKey) {
+            const container = document.getElementById('subcategoriesContainer');
+            if (!container) return;
+
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
+            let allSubcategories = JSON.parse(localStorage.getItem('dentaSubcategories')) || {
+                'clinics': [],
+                'labs': [],
+                'maintenance': []
+            };
+
+            let currentList = allSubcategories[sectionKey] || [];
+            container.innerHTML = '';
+
+            if (currentList.length === 0) {
+                const noText = translations[currentLang]['noSubcategories'] || 'لا توجد تصنيفات مضافة حالياً.';
+                container.innerHTML = `<p style="text-align:center; width:100%; color:#777; padding:20px;">${noText}</p>`;
+                return;
+            }
+
+            currentList.forEach(sub => {
+                let card = document.createElement('div');
+                card.className = 'subcat-card';
+
+                if (sub.available === false || sub.available === 'false') {
+                    const notAvailText = translations[currentLang]['notAvailable'] || 'غير متوفر حالياً';
+                    card.style.opacity = '0.7';
+                    card.innerHTML = `
+                        <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
+                        <h3>${sub.name}</h3>
+                        <span style="color: #ff4d4d; font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">${notAvailText}</span>
+                    `;
+                    card.onclick = function() {
+                        const alertText = translations[currentLang]['notAvailableAlert'] || 'عذراً، هذا التصنيف غير متوفر حالياً.';
+                        alert(alertText);
+                    };
+                } else {
+                    card.innerHTML = `
+                        <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
+                        <h3>${sub.name}</h3>
+                        <i class="fa-solid ${currentLang === 'ar' ? 'fa-chevron-left' : 'fa-chevron-right'} subcat-arrow"></i>
+                    `;
+                    card.onclick = function() {
+                        window.location.href = 'product.html?category=' + encodeURIComponent(sub.name);
+                    };
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function openContactModal() { document.getElementById('contactModal').style.display = 'flex'; }
+        function closeContactModal() { document.getElementById('contactModal').style.display = 'none'; }
+
+        window.onclick = function(event) {
+            if (event.target.id === 'aboutModal' || event.target.id === 'contactModal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
     }
-</script>
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
+    }
+});
+    </script>
 
-<div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
-        <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
-        <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
-        <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
-    </div>
-</div>
-
- </script>
-<div id="contactModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:2000;">
-    <div style="background:white; padding:30px; border-radius:10px; width:400px; max-width:90%; text-align:right; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-        <h3 style="color:#0b1c3f; margin-bottom:20px; font-size:18px; border-bottom:2px solid #f0f0f0; padding-bottom:8px;">تواصل معنا</h3>
-        <p style="margin-bottom:15px; font-size:14px; color:#555;">يسعدنا تواصلكم معنا عبر الوسائل التالية:</p>
-
-        <!-- رقم الواتساب -->
-        <div style="margin-bottom:15px;">
-            <a href="https://wa.me/905393694740" target="_blank" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#25D366; background:#e8f8f0; padding:12px; border-radius:8px; font-weight:bold;">
-                <i class="fa-brands fa-whatsapp" style="font-size:22px;"></i>
-                <span>+90 539 369 4740 (واتساب)</span>
-            </a>
+    <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+        <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
+            <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
+            <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
+            <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
         </div>
-
-        <!-- البريد الإلكتروني -->
-        <div style="margin-bottom:20px;">
-            <a href="mailto:dentastore00@gmail.com" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#0056b3; background:#e8f4fd; padding:12px; border-radius:8px; font-weight:bold;">
-                <i class="fa-solid fa-envelope" style="font-size:20px;"></i>
-                <span>dentastore00@gmail.com</span>
-            </a>
-        </div>
-
-        <button onclick="closeContactModal()" style="width:100%; padding:10px; background:#0b1c3f; color:white; border:none; border-radius:5px; cursor:pointer; font-family:'Cairo', sans-serif; font-weight:bold;">إغلاق</button>
     </div>
-</div>
 
-<script>
-    function openContactModal() {
-        document.getElementById('contactModal').style.display = 'flex';
-    }
+    <div id="contactModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:2000;">
+        <div style="background:white; padding:30px; border-radius:10px; width:400px; max-width:90%; text-align:right; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+            <h3 style="color:#0b1c3f; margin-bottom:20px; font-size:18px; border-bottom:2px solid #f0f0f0; padding-bottom:8px;" data-key="contactTitle">تواصل معنا</h3>
+            <p style="margin-bottom:15px; font-size:14px; color:#555;" data-key="contactDesc">يسعدنا تواصلكم معنا عبر الوسائل التالية:</p>
 
-    function closeContactModal() {
-        document.getElementById('contactModal').style.display = 'none';
-    }
-</script>
+            <div style="margin-bottom:15px;">
+                <a href="https://wa.me/905393694740" target="_blank" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#25D366; background:#e8f8f0; padding:12px; border-radius:8px; font-weight:bold;">
+                    <i class="fa-brands fa-whatsapp" style="font-size:22px;"></i>
+                    <span>+90 539 369 4740 (<span data-key="whatsappText">واتساب</span>)</span>
+                </a>
+            </div>
 
+            <div style="margin-bottom:20px;">
+                <a href="mailto:dentastore00@gmail.com" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#0056b3; background:#e8f4fd; padding:12px; border-radius:8px; font-weight:bold;">
+                    <i class="fa-solid fa-envelope" style="font-size:20px;"></i>
+                    <span>dentastore00@gmail.com</span>
+                </a>
+            </div>
+
+            <button onclick="closeContactModal()" style="width:100%; padding:10px; background:#0b1c3f; color:white; border:none; border-radius:5px; cursor:pointer; font-family:'Cairo', sans-serif; font-weight:bold;" data-key="modalAboutCloseBtn">إغلاق</button>
+        </div>
+    </div>
 </body>
 </html>

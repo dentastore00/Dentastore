@@ -95,10 +95,12 @@
         <ul class="sidebar-menu">
             <li class="active" onclick="switchTab('productsTab', 'إدارة المنتجات')"><i class="fa-solid fa-box"></i> إدارة المنتجات</li>
             <li onclick="switchTab('ordersTab', 'إدارة الطلبات')"><i class="fa-solid fa-box-open"></i> إدارة الطلبات</li>
+            <li onclick="switchTab('returns-tab', 'إدارة طلبات الاسترجاع', event)"><i class="fas fa-undo"></i> طلبات الاسترجاع</li>
             <li onclick="switchTab('couponsTab', 'إدارة أكواد الخصم والفئات')"><i class="fa-solid fa-ticket"></i> إدارة أكواد الخصم والفئات</li>
             <li onclick="switchTab('storeDesignTab', 'تخصيص صور وأقسام المتجر')"><i class="fa-solid fa-image"></i> تخصيص صور وأقسام المتجر</li>
             <li onclick="switchTab('brandsTab', 'إدارة الشركات والبراندات')"><i class="fa-solid fa-building"></i> إدارة الشركات والبراندات</li>
             <li onclick="switchTab('subcategoriesTab', 'إدارة التصنيفات الفرعية')"><i class="fa-solid fa-layer-group"></i> إدارة التصنيفات الفرعية</li>
+            <li onclick="switchTab('contactSettingTab', this)"><i class="fa-solid fa-address-book"></i> إعدادات التواصل</li>
             <li onclick="goToStore()"><i class="fa-solid fa-store"></i> الانتقال للمتجر الرئيسي</li>
         </ul>
     </div>
@@ -206,6 +208,30 @@
             </div>
         </div>
 
+
+       <div id="returns-tab" class="tab-content">
+    <div class="section-box">
+        <h3><i class="fas fa-undo"></i> طلبات الاسترجاع الواردة</h3>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>رقم الطلب / الفاتورة</th>
+                        <th>تاريخ الشراء</th>
+                        <th>سبب الاسترجاع</th>
+                        <th>صورة المنتج</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="adminReturnsTableBody">
+                    <!-- سيتم تعبئتها برمجياً عبر الجافاسكريبت -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
         <!-- تبويب 3: أكواد الخصم ونسب الفئات -->
         <div id="couponsTab" class="tab-content">
             <div class="section-box">
@@ -256,6 +282,26 @@
             </div>
         </div>
 
+
+<!-- تبويب إعدادات التواصل -->
+<div id="contactSettingTab" class="tab-content">
+    <div class="section-box" style="padding: 30px; font-family: 'Cairo', sans-serif;">
+        <h2 style="color: #0b1c3f; margin-bottom: 10px;">إعدادات وسائل التواصل والاتصال</h2>
+        <p style="color: #666; margin-bottom: 25px;">قم بتحديث أرقام الواتساب والبريد الإلكتروني لتحدث فوراً في كافة صفحات المتجر.</p>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">رقم الواتساب الرئيسي:</label>
+            <input type="text" id="whatsappPrimary" placeholder="+90 539 369 4740" style="width: 100%; max-width: 450px; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">البريد الإلكتروني الرسمي:</label>
+            <input type="email" id="supportEmail" placeholder="dentastore00@gmail.com" style="width: 100%; max-width: 450px; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        </div>
+        
+        <button onclick="saveContactSettings()" style="background: #0b1c3f; color: white; padding: 12px 30px; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 15px;">حفظ التغييرات</button>
+    </div>
+</div>
         <!-- تبويب 4: تخصيص المتجر -->
         <div id="storeDesignTab" class="tab-content">
             <div class="section-box">
@@ -397,6 +443,8 @@
         else if (tabId === 'storeDesignTab') loadStoreDesignSettings();
         else if (tabId === 'brandsTab') loadBrandsAdmin();
         else if (tabId === 'subcategoriesTab') renderAdminSubsTable();
+        else if (tabId === 'returns-tab') loadAdminReturns();
+        else if (tabId === 'contactSettingTab') loadContactSettingsToAdmin();
     }
 
     function goToStore() { 
@@ -587,58 +635,111 @@
         document.getElementById('editIndex').value = '-1';
     }
 
-    // إدارة الطلبات
-    function loadAdminOrders() {
-        let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
-        let tbody = document.getElementById('adminOrdersList');
-        if (!tbody) return;
+   // إدارة الطلبات //
+function loadAdminOrders() {
+    let orders = JSON.parse(localStorage.getItem('store_orders')) || [];
+    let tbody = document.getElementById('adminOrdersList');
+    if (!tbody) return;
 
-        if (orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding: 20px;">لا توجد طلبات جديدة حتى الآن.</td></tr>`;
-            return;
-        }
-
-        tbody.innerHTML = '';
-        orders.forEach((order, idx) => {
-            let itemsText = order.items ? order.items.map(i => `${i.name} (الكمية: ${i.quantity})`).join(', ') : '';
-            let statusBadge = order.status === 'تم التسليم' 
-                ? `<span style="color: #10b981; font-weight: bold; background: #d1fae5; padding: 3px 8px; border-radius: 4px;">تم التسليم</span>` 
-                : `<span style="color: #f59e0b; font-weight: bold; background: #fef3c7; padding: 3px 8px; border-radius: 4px;">قيد المعالجة</span>`;
-
-            tbody.innerHTML += `
-                <tr>
-                    <td style="font-weight: bold; color: #0b1c3f;">${order.id || idx+1}</td>
-                    <td style="font-size: 13px; color: #555;">${order.date || '-'}</td>
-                    <td style="font-size: 13px;">${itemsText}</td>
-                    <td style="font-weight: bold; color: #0056b3;">$${order.total || 0}</td>
-                    <td>${statusBadge}</td>
-                    <td>
-                        <button class="btn-success" onclick="markOrderDelivered(${idx})"><i class="fa-solid fa-check"></i> تسليم</button>
-                        <button class="btn-danger" onclick="deleteOrder(${idx})"><i class="fa-solid fa-trash"></i> حذف</button>
-                    </td>
-                </tr>
-            `;
-        });
+    if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777; padding: 20px;">لا توجد طلبات جديدة حتى الآن.</td></tr>`;
+        return;
     }
 
-    function markOrderDelivered(idx) {
-        let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
-        if(orders[idx]) {
-            orders[idx].status = 'تم التسليم';
-            localStorage.setItem('dentaOrders', JSON.stringify(orders));
-            loadAdminOrders();
-        }
-    }
+    tbody.innerHTML = '';
+    orders.forEach((order, idx) => {
+        let itemsText = order.items ? order.items.map(i => `${i.name} ( الكمية : ${i.quantity})`).join(', ') : '';
+        let statusBadge = order.status === 'تم التسليم'
+            ? `<span style="color: #2563eb; font-weight: bold; background: #dbeafe; padding: 3px 8px; border-radius: 4px;">تم التسليم</span>`
+            : `<span style="color: #f59e0b; font-weight: bold; background: #fef3c7; padding: 3px 8px; border-radius: 4px;">قيد المعالجة</span>`;
 
-    function deleteOrder(idx) {
-        if (confirm('هل أنت متأكد من رغبتك في حذف هذا الطلب؟')) {
-            let orders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
-            orders.splice(idx, 1);
-            localStorage.setItem('dentaOrders', JSON.stringify(orders));
-            loadAdminOrders();
-        }
-    }
+        tbody.innerHTML += `
+            <tr>
+                <td style="font-weight: bold; color: #0b1c3f;">${order.orderNumber || idx+1}</td>
+                <td style="font-size: 13px; color: #555;">${order.date || '-'}</td>
+                <td style="font-size: 13px; color: #555;">${itemsText}</td>
+                <td style="font-weight: bold; color: #0056b3;">${order.total || 0}</td>
+                <td>${statusBadge}</td>
+                <td>
+                    <button onclick="markOrderDelivered(${idx})" style="background-color: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-bottom: 5px;"><i class="fa-solid fa-check"></i> تسليم</button>
+                    <button class="btn-danger" onclick="deleteOrder(${idx})" style="cursor: pointer;"><i class="fa-solid fa-trash"></i> حذف</button>
+                </td>
+            </tr>
+        `;
+    });
+}
 
+function markOrderDelivered(idx) {
+    let orders = JSON.parse(localStorage.getItem('store_orders')) || [];
+    if(orders[idx]) {
+        orders[idx].status = 'تم التسليم';
+        localStorage.setItem('store_orders', JSON.stringify(orders));
+        loadAdminOrders();
+    }
+}
+
+function deleteOrder(idx) {
+    if (confirm('هل أنت متأكد من رغبتك في حذف هذا الطلب؟')) {
+        let orders = JSON.parse(localStorage.getItem('store_orders')) || [];
+        orders.splice(idx, 1);
+        localStorage.setItem('store_orders', JSON.stringify(orders));
+        loadAdminOrders();
+    }
+}
+
+
+// دالة تحميل وتحديث جدول طلبات الاسترجاع في لوحة التحكم
+function loadAdminReturns() {
+    const tbody = document.getElementById('adminReturnsTableBody');
+    if (!tbody) return;
+    
+    let returnsList = JSON.parse(localStorage.getItem('dentaReturnRequests')) || [];
+    
+    if (returnsList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #777; padding: 20px;">لا توجد طلبات استرجاع حالياً</td></tr>`;
+        return;
+    }
+    
+    let html = '';
+    returnsList.forEach((item, index) => {
+        let statusBadge = '';
+        if (item.status === 'قبول') {
+            statusBadge = '<span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-weight: bold;">تم القبول</span>';
+        } else if (item.status === 'رفض') {
+            statusBadge = '<span style="background: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 4px; font-weight: bold;">مرفوض</span>';
+        } else {
+            statusBadge = '<span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold;">قيد المعاينة</span>';
+        }
+
+        html += `
+            <tr>
+                <td><strong>${item.orderNumber}</strong></td>
+                <td>${item.purchaseDate}</td>
+                <td>${item.notes || 'لا توجد ملاحظات'}</td>
+                <td>
+                    ${item.image ? `<a href="${item.image}" target="_blank"><img src="${item.image}" alt="صورة المنتج" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;"></a>` : 'لا توجد صورة'}
+                </td>
+                <td>${statusBadge}</td>
+                <td>
+                    <button onclick="updateReturnStatus(${index}, 'قيد المعاينة')" class="btn-warning" style="padding: 5px 10px; font-size: 12px; margin-bottom: 2px; cursor:pointer;">معاينة</button>
+                    <button onclick="updateReturnStatus(${index}, 'قبول')" style="padding: 5px 10px; font-size: 12px; margin-bottom: 2px; background: #28a745; color: #fff; border:none; border-radius:3px; cursor:pointer;">قبول</button>
+                    <button onclick="updateReturnStatus(${index}, 'رفض')" style="padding: 5px 10px; font-size: 12px; margin-bottom: 2px; background: #dc3545; color: #fff; border:none; border-radius:3px; cursor:pointer;">رفض</button>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+// دالة تحديث حالة طلب الاسترجاع من قِبل الإدارة
+function updateReturnStatus(index, newStatus) {
+    let returnsList = JSON.parse(localStorage.getItem('dentaReturnRequests')) || [];
+    if (returnsList[index]) {
+        returnsList[index].status = newStatus;
+        localStorage.setItem('dentaReturnRequests', JSON.stringify(returnsList));
+        loadAdminReturns();
+    }
+}
     // تصميم المتجر والبانر
     function loadStoreDesignSettings() {
         let hero = JSON.parse(localStorage.getItem('dentalHeroBanner')) || { title: "", desc: "", image: "" };
@@ -771,6 +872,9 @@
         loadProductBrandsDropdown();
     }
 
+   // متغير عالمي لتتبع التصنيف الذي يتم تعديله حالياً (إذا كان فارغاً فهذا يعني أننا في وضع الإضافة)
+    let editingSubcategory = null;
+
     // إدارة التصنيفات الفرعية (Subcategories)
     function triggerSubCategories(val) {
         const subCategorySelect = document.getElementById('prodSubCategory');
@@ -840,12 +944,58 @@
         }
 
         if (!data[section]) data[section] = [];
-        data[section].push({ section, name, image, available });
+
+        if (editingSubcategory !== null) {
+            // حالة التعديل: إذا تم تغيير القسم، أو إذا بقي في نفس القسم
+            const { oldSection, oldIndex } = editingSubcategory;
+            
+            // إزالة العنصر من مكانه القديم
+            if (data[oldSection] && data[oldSection][oldIndex] !== undefined) {
+                data[oldSection].splice(oldIndex, 1);
+            }
+
+            // إضافة العنصر المحدث في القسم الجديد/الحالي
+            data[section].push({ section, name, image, available });
+
+            // إعادة ضبط وضع التعديل
+            editingSubcategory = null;
+            const submitBtn = document.querySelector('#subCategoryForm button[type="submit"]') || document.querySelector('#subCategoryForm .btn-primary');
+            if (submitBtn) submitBtn.innerText = 'حفظ / إضافة';
+
+            alert('تم تحديث التصنيف بنجاح!');
+        } else {
+            // حالة الإضافة الجديدة
+            data[section].push({ section, name, image, available });
+            alert('تم حفظ وإضافة التصنيف بنجاح!');
+        }
 
         localStorage.setItem('dentaSubcategories', JSON.stringify(data));
         renderAdminSubsTable();
         document.getElementById('subCategoryForm').reset();
-        alert('تم حفظ وإضافة التصنيف بنجاح!');
+    }
+
+    // دالة لتعبئة النموذج ببيانات التصنيف عند الضغط على زر تعديل
+    function editSubcategory(sectionKey, index) {
+        let data = JSON.parse(localStorage.getItem('dentaSubcategories')) || {};
+        if (data[sectionKey] && data[sectionKey][index]) {
+            const item = data[sectionKey][index];
+
+            // تعبئة حقول النموذج بالبيانات الحالية
+            document.getElementById('admSubSection').value = item.section || sectionKey;
+            document.getElementById('admSubName').value = item.name || '';
+            document.getElementById('admSubImage').value = item.image || '';
+            document.getElementById('admSubAvailable').value = item.available !== false ? 'true' : 'false';
+
+            // حفظ مؤشر العنصر والقسم القديم لكي نتمكن من تعديله عند الضغط على حفظ
+            editingSubcategory = { oldSection: sectionKey, oldIndex: index };
+
+            // تغيير نص زر الحفظ إلى "تحديث" للتوضيح للمستخدم
+            const submitBtn = document.querySelector('#subCategoryForm button[type="submit"]') || document.querySelector('#subCategoryForm .btn-primary');
+            if (submitBtn) submitBtn.innerText = 'تحديث التصنيف';
+
+            // التمرير بسلاسة إلى نموذج الإضافة/التعديل بالأعلى
+            document.getElementById('subCategoryForm').scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     function renderAdminSubsTable() {
@@ -887,7 +1037,8 @@
                     <td style="padding: 12px;"><img src="${item.image || 'https://via.placeholder.com/40'}" width="40" style="border-radius:4px;"></td>
                     <td style="padding: 12px;">${item.name}</td>
                     <td style="padding: 12px;">${item.available !== false ? '<span style="color:green;">متوفر</span>' : '<span style="color:red;">غير متوفر</span>'}</td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 12px; display: flex; gap: 5px;">
+                        <button onclick="editSubcategory('${item.sectionKey}', ${item.originalIndex})" style="background-color: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">تعديل</button>
                         <button onclick="deleteSubcategory('${item.sectionKey}', ${item.originalIndex})" class="btn-danger">حذف</button>
                     </td>
                 </tr>
@@ -955,6 +1106,18 @@
     }
 });
 
+
+// دالة حفظ إعدادات التواصل
+// دالة حفظ إعدادات التواصل
+function saveContactSettings() {
+    const waPrimary = document.getElementById('whatsappPrimary').value;
+    const email = document.getElementById('supportEmail').value;
+    
+    localStorage.setItem('store_wa_primary', waPrimary);
+    localStorage.setItem('store_email', email);
+    
+    alert('تم حفظ البيانات بنجاح!');
+}
 </script>
 
 </body>

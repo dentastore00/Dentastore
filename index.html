@@ -323,6 +323,118 @@ img, video, table {
         margin-bottom: 5px;
     }
 }
+
+.search-bar {
+    position: relative; /* ضروري جداً لكي تلتصق القائمة المنبثقة بحقل البحث تماماً */
+}
+
+.search-popup-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    max-height: 350px;
+    overflow-y: auto;
+    display: none; /* مخفي افتراضياً ولا يظهر إلا عند الكتابة */
+    margin-top: 5px;
+}
+
+.popup-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.popup-item:hover {
+    background-color: #f8f9fa;
+}
+
+.popup-item span {
+    font-size: 14px;
+    color: #333;
+}
+
+.search-bar {
+    position: relative; /* ضروري لكي تظهر القائمة تحته مباشرة */
+}
+
+#searchPopup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none; /* تظل مخفية حتى يتم البحث */
+}
+
+.popup-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* تنسيق شريط البحث ليكون الحاوية الأب */
+.search-bar {
+    position: relative !important;
+}
+
+/* تنسيق نافذة نتائج البحث لتطابق نافذة تواصل معنا تماماً */
+#searchPopup {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 9999;
+    max-height: 350px;
+    overflow-y: auto;
+    display: none;
+    padding: 8px 0;
+}
+
+/* شكل عناصر المنتجات داخل النافذة */
+.popup-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.popup-item:last-child {
+    border-bottom: none;
+}
+
+.popup-item:hover {
+    background-color: #f8f9fa;
+}
 </style>
     </style>
 </head>
@@ -359,6 +471,7 @@ img, video, table {
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="ابحث عن منتج، شركة أو تصنيف..." oninput="searchProducts()">
                 <button><i class="fa-solid fa-search"></i></button>
+                <div id="searchPopup" class="search-popup-results"></div>
             </div>
         </div>
 
@@ -390,6 +503,7 @@ img, video, table {
         <ul class="nav-links">
          <ul class="nav-links">
     <li><a href="index.html" class="active" data-key="navHome">الرئيسية</a></li>
+    <li><a href="product.html" data-key="navProducts">جميع المنتجات</a></li>
 <li><a href="brands.html" data-key="navBrands">الشركات</a></li>
    <li><a href="offers.html" data-key="navOffers">العروض</a></li>
 <li><a href="best-sellers.html" data-key="navBestSeller" onclick="window.location.href='best-sellers.html'; return false;">الأكثر مبيعاً</a></li>
@@ -475,7 +589,7 @@ img, video, table {
         </div>
     </section>
 
-    <section class="dynamic-products-section">
+    <section id="all-products" class="dynamic-products-section">ٍ
         <div class="section-header-flex">
             <span class="section-title" id="sectionTitleText" data-key="allProductsTitle">جميع المنتجات الطبية</span>
             <a href="#" class="view-all-link" onclick="displayProducts('all'); return false;" data-key="viewAllProducts">عرض جميع المنتجات</a>
@@ -669,26 +783,29 @@ img, video, table {
                 document.documentElement.setAttribute('lang', 'ar');
             }
 
-            const elements = document.querySelectorAll('[data-key]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
-            });
+           const elements = document.querySelectorAll('[data-key]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-key');
+        // التأكد من أن الكائن والترجمة الخاصة به موجودان لتجنب أي أخطاء
+        if (translations && translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
 
-            document.getElementById('pageTitle').innerText = translations[lang].pageTitle;
-            document.getElementById('txtTrackOrder').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${translations[lang].txtTrackOrder}`;
-            document.getElementById('txtTechSupport').innerHTML = `<i class="fa-solid fa-headset"></i> ${translations[lang].txtTechSupport}`;
-            document.getElementById('txtOriginalQuality').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${translations[lang].txtOriginalQuality}`;
-            document.getElementById('txtDelivery').innerHTML = `<i class="fa-solid fa-truck"></i> ${translations[lang].txtDelivery}`;
-            document.getElementById('txtWishlist').innerText = translations[lang].txtWishlist;
-            document.getElementById('txtCart').innerText = translations[lang].txtCart;
-            document.getElementById('txtAccount').innerText = translations[lang].txtAccount;
-            document.getElementById('txtAllDepts').innerHTML = `<i class="fa-solid fa-bars"></i> ${translations[lang].txtAllDepts}`;
-            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
-            document.getElementById('popupText').innerText = translations[lang].contactPopupMsg;
-            
+           // حماية كل عنصر للتأكد من وجوده قبل محاولة تعديل نصه لتجنب أي أخطاء
+    if(document.getElementById('pageTitle')) document.getElementById('pageTitle').innerText = translations[lang].pageTitle || '';
+    if(document.getElementById('txtTrackOrder')) document.getElementById('txtTrackOrder').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${translations[lang].txtTrackOrder || ''}`;
+    if(document.getElementById('txtTechSupport')) document.getElementById('txtTechSupport').innerHTML = `<i class="fa-solid fa-headset"></i> ${translations[lang].txtTechSupport || ''}`;
+    if(document.getElementById('txtOriginalQuality')) document.getElementById('txtOriginalQuality').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${translations[lang].txtOriginalQuality || ''}`;
+    if(document.getElementById('txtDelivery')) document.getElementById('txtDelivery').innerHTML = `<i class="fa-solid fa-truck"></i> ${translations[lang].txtDelivery || ''}`;
+    if(document.getElementById('txtWishlist')) document.getElementById('txtWishlist').innerText = translations[lang].txtWishlist || '';
+    if(document.getElementById('txtCart')) document.getElementById('txtCart').innerText = translations[lang].txtCart || '';
+    if(document.getElementById('txtAccount')) document.getElementById('txtAccount').innerText = translations[lang].txtAccount || '';
+    if(document.getElementById('txtAllDepts')) document.getElementById('txtAllDepts').innerHTML = `<i class="fa-solid fa-bars"></i> ${translations[lang].txtAllDepts || ''}`;
+    if(document.getElementById('searchInput')) document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder || '';
+    if(document.getElementById('popupText')) document.getElementById('popupText').innerText = translations[lang].contactPopupMsg || '';
+    if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang;
+    
             document.getElementById('langSelect').value = lang;
             displayProducts(currentCategory);
         }
@@ -782,23 +899,114 @@ img, video, table {
     });
 }
 
-        function searchProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const container = document.getElementById('productsContainer');
-            const products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
-            
-            container.innerHTML = '';
-            let filtered = products.filter(p => p.name.toLowerCase().includes(query) || (p.brand && p.brand.toLowerCase().includes(query)));
+   
+// --- دالة تغيير اللغة بشكل آمن ---
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('dentaLang', lang);
 
-            if (filtered.length === 0) {
-                container.innerHTML = `<p class="empty-msg">${currentLang === 'tr' ? 'Sonuç bulunamadı' : 'لا توجد نتائج مطابقة للبحث'}</p>`;
-                return;
-            }
+    if (lang === 'tr') {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'tr');
+    } else {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    }
 
-            filtered.forEach(product => {
-                renderProductCard(product, container);
-            });
+    const elements = document.querySelectorAll('[data-key]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-key');
+        if (translations && translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
         }
+    });
+
+    // حماية كاملة للعناصر لعدم إيقاف الصفحة إذا كان العنصر غير موجود
+    if(document.getElementById('pageTitle')) document.getElementById('pageTitle').innerText = translations[lang].pageTitle || '';
+    if(document.getElementById('txtTrackOrder')) document.getElementById('txtTrackOrder').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${translations[lang].txtTrackOrder || ''}`;
+    if(document.getElementById('txtTechSupport')) document.getElementById('txtTechSupport').innerHTML = `<i class="fa-solid fa-headset"></i> ${translations[lang].txtTechSupport || ''}`;
+    if(document.getElementById('txtOriginalQuality')) document.getElementById('txtOriginalQuality').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${translations[lang].txtOriginalQuality || ''}`;
+    if(document.getElementById('txtDelivery')) document.getElementById('txtDelivery').innerHTML = `<i class="fa-solid fa-truck"></i> ${translations[lang].txtDelivery || ''}`;
+    if(document.getElementById('txtWishlist')) document.getElementById('txtWishlist').innerText = translations[lang].txtWishlist || '';
+    if(document.getElementById('txtCart')) document.getElementById('txtCart').innerText = translations[lang].txtCart || '';
+    if(document.getElementById('txtAccount')) document.getElementById('txtAccount').innerText = translations[lang].txtAccount || '';
+    if(document.getElementById('txtAllDepts')) document.getElementById('txtAllDepts').innerHTML = `<i class="fa-solid fa-bars"></i> ${translations[lang].txtAllDepts || ''}`;
+    if(document.getElementById('searchInput')) document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder || '';
+    if(document.getElementById('popupText')) document.getElementById('popupText').innerText = translations[lang].contactPopupMsg || '';
+    if(document.getElementById('langSelect')) document.getElementById('langSelect').value = lang;
+    
+    if (typeof displayProducts === 'function') {
+        displayProducts(currentCategory);
+    }
+}
+
+// --- دالة البحث المحدثة بالقائمة المنبثقة ---
+function searchProducts() {
+    const inputElement = document.getElementById('searchInput');
+    const popupContainer = document.getElementById('searchPopup');
+    
+    if (!inputElement || !popupContainer) return;
+
+    const query = inputElement.value.toLowerCase().trim();
+    const products = JSON.parse(localStorage.getItem('dentaProducts')) || [];
+    
+    popupContainer.innerHTML = '';
+
+    if (query === '') {
+        popupContainer.style.display = 'none';
+        return;
+    }
+
+    let filtered = products.filter(p => p.name.toLowerCase().includes(query) || (p.brand && p.brand.toLowerCase().includes(query)));
+
+    if (filtered.length === 0) {
+        popupContainer.innerHTML = `<div style="padding: 12px 16px; text-align: center; color: #777; font-size: 14px;">لا توجد نتائج مطابقة للبحث</div>`;
+        popupContainer.style.display = 'block';
+        return;
+    }
+
+    filtered.forEach(product => {
+        const item = document.createElement('div');
+        item.className = 'popup-item';
+        
+        item.innerHTML = `
+            <span style="color: #333; font-size: 14px;">${product.name}</span>
+            <span style="font-weight: bold; color: #0056b3; font-size: 14px;">${product.price ? product.price + ' €' : ''}</span>
+        `;
+        
+        item.onclick = function() {
+            inputElement.value = product.name;
+            popupContainer.style.display = 'none';
+            
+            const container = document.getElementById('productsContainer');
+            if (container && typeof renderProductCard === 'function') {
+                container.innerHTML = '';
+                renderProductCard(product, container);
+                container.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+        
+        popupContainer.appendChild(item);
+    });
+
+    popupContainer.style.display = 'block';
+}
+
+// --- إخفاء القائمة المنبثقة عند الضغط خارجها ---
+document.addEventListener('click', function(e) {
+    const searchContainer = document.querySelector('.search-bar');
+    const popupContainer = document.getElementById('searchPopup');
+    if (searchContainer && popupContainer && !searchContainer.contains(e.target)) {
+        popupContainer.style.display = 'none';
+    }
+});
+
+// --- تنفيذ عند تحميل الصفحة ---
+window.onload = function() {
+    if (typeof updateBadges === 'function') {
+        updateBadges();
+    }
+};
 
        function renderProductCard(product, container) {
             let convertedPrice = (parseFloat(product.price) * currencyInfo.rate).toFixed(2);
@@ -1094,7 +1302,7 @@ function displayNewProducts() {
 <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
     <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
         <h3 data-key="modalAboutTitle" style="color:#002D62; margin-bottom: 15px;">من نحن</h3>
-        <p data-key="modalAboutDesc" style="line-height: 1.7; color:#444;">شركة رائدة في توفير مواد ومستلزمات طب الأسنان...</p>
+        <p data-key="modalAboutDesc" style="line-height: 1.7; color:#444;">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
         <button onclick="closeModal('aboutModal')" data-key="modalAboutCloseBtn" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;">إغلاق</button>
     </div>
 </div>
@@ -1142,30 +1350,29 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-    </script>
+</script>
 <div id="contactModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:2000;">
     <div style="background:white; padding:30px; border-radius:10px; width:400px; max-width:90%; text-align:right; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-        <h3 style="color:#0b1c3f; margin-bottom:20px; font-size:18px; border-bottom:2px solid #f0f0f0; padding-bottom:8px;">تواصل معنا</h3>
-        <p style="margin-bottom:15px; font-size:14px; color:#555;">يسعدنا تواصلكم معنا عبر الوسائل التالية:</p>
+        <h3 data-i18n="contactTitle" style="color:#0b1c3f; margin-bottom:20px; font-size:18px; border-bottom:2px solid #f0f0f0; padding-bottom:8px;">تواصل معنا</h3>
+        <p data-i18n="contactDesc" style="margin-bottom:15px; font-size:14px; color:#555;">يسعدنا تواصلكم معنا عبر الوسائل التالية:</p>
 
         <!-- رقم الواتساب -->
         <div style="margin-bottom:15px;">
-            <a href="https://wa.me/905393694740" target="_blank" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#25D366; background:#e8f8f0; padding:12px; border-radius:8px; font-weight:bold;">
+            <a href="https://wa.me/905393694740" id="displayWhatsappLink" target="_blank" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#25D366; background:#e8f8f0; padding:12px; border-radius:8px; font-weight:bold;">
                 <i class="fa-brands fa-whatsapp" style="font-size:22px;"></i>
-                <span>+90 539 369 4740 (واتساب)</span>
+                <span id="displayWhatsappText">+90 539 369 4740 (<span data-i18n="whatsappText">واتساب</span>)</span>
             </a>
         </div>
 
         <!-- البريد الإلكتروني -->
         <div style="margin-bottom:20px;">
-            <a href="mailto:dentastore00@gmail.com" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#0056b3; background:#e8f4fd; padding:12px; border-radius:8px; font-weight:bold;">
+            <a href="mailto:dentastore00@gmail.com" id="displayEmailLink" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:#0056b3; background:#e8f4fd; padding:12px; border-radius:8px; font-weight:bold;">
                 <i class="fa-solid fa-envelope" style="font-size:20px;"></i>
-                <span>dentastore00@gmail.com</span>
+                <span id="displayEmailText">dentastore00@gmail.com</span>
             </a>
         </div>
 
-        <button onclick="closeContactModal()" style="width:100%; padding:10px; background:#0b1c3f; color:white; border:none; border-radius:5px; cursor:pointer; font-family:'Cairo', sans-serif; font-weight:bold;">إغلاق</button>
+        <button onclick="closeContactModal()" data-i18n="closeBtn" style="width:100%; padding:10px; background:#0b1c3f; color:white; border:none; border-radius:5px; cursor:pointer; font-family:'Cairo', sans-serif; font-weight:bold;">إغلاق</button>
     </div>
 </div>
 
@@ -1192,6 +1399,70 @@ window.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'login.html';
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
+    }
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
+    }
+});
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // جلب الشركات المخزنة محلياً في المتصفح
+    const brands = JSON.parse(localStorage.getItem('dentaBrands')) || [];
+    const container = document.getElementById('brandsContainer');
+    
+    if (container && brands.length > 0) {
+        container.innerHTML = ''; // تفريغ الشريط أولاً
+        brands.forEach(brand => {
+            container.innerHTML += `
+                <div class="brand-item" style="display: inline-block; text-align: center; margin: 0 15px; cursor: pointer;" onclick="window.location.href='brands.html?brand=${encodeURIComponent(brand.name)}'">
+                    <img src="${brand.image}" alt="${brand.name}" style="width: 70px; height: 70px; object-fit: contain; border-radius: 50%; background: #fff; border: 1px solid #ddd; padding: 5px;">
+                    <p style="margin-top: 5px; font-size: 13px; color: #0b1c3f; font-weight: bold;">${brand.name}</p>
+                </div>
+            `;
+        });
+    }
+});
+
+
+
+// كود تحديث أرقام التواصل تلقائياً من الـ LocalStorage في كل صفحات المتجر
+document.addEventListener("DOMContentLoaded", () => {
+    const primaryWa = localStorage.getItem('store_wa_primary');
+    const supportEmail = localStorage.getItem('store_email');
+
+    if (primaryWa) {
+        const waLink = document.getElementById('displayWhatsappLink');
+        const waText = document.getElementById('displayWhatsappText');
+        if (waLink) waLink.href = `https://wa.me/${primaryWa.replace(/\s+/g, '')}`;
+        if (waText) waText.innerHTML = `${primaryWa} (<span data-i18n="whatsappText">واتساب</span>)`;
+    }
+
+    if (supportEmail) {
+        const emailLink = document.getElementById('displayEmailLink');
+        const emailText = document.getElementById('displayEmailText');
+        if (emailLink) emailLink.href = `mailto:${supportEmail}`;
+        if (emailText) emailText.innerText = supportEmail;
+    }
+});
 </script>
 
 

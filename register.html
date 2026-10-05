@@ -3,178 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DENTA STORE - إنشاء حساب جديد</title>
+    <title data-i18n="registerPageTitle">DENTA STORE - إنشاء حساب جديد</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
         body { background-color: #f9f9f9; color: #333; }
-        
         .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; }
-        .top-bar div { display: flex; gap: 20px; align-items: center; }
-        
         header { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 15px 3%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo-area img { height: 65px; width: auto; object-fit: contain; }
-        
         .page-wrapper { max-width: 600px; margin: 40px auto; padding: 0 20px; }
         .auth-card { background: white; border: 1px solid #e5e5e5; border-radius: 10px; padding: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .auth-title { font-size: 22px; color: #0b1c3f; margin-bottom: 25px; font-weight: bold; text-align: center; }
-        
         .form-group { margin-bottom: 20px; text-align: right; }
+        [dir="ltr"] .form-group { text-align: left; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #0b1c3f; font-size: 14px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Cairo', sans-serif; outline: none; transition: 0.3s; }
-        .form-group input:focus { border-color: #0056b3; box-shadow: 0 0 5px rgba(0,86,179,0.2); }
-        
-        .btn-submit { background: #0056b3; color: #fff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; font-family: 'Cairo', sans-serif; margin-top: 10px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Cairo', sans-serif; outline: none; }
+        .btn-submit { background: #0056b3; color: #fff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; font-family: 'Cairo', sans-serif; margin-top: 10px; }
         .btn-submit:hover { background: #004085; }
-        
         .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
         .auth-footer a { color: #0056b3; text-decoration: none; font-weight: bold; }
-        .auth-footer a:hover { text-decoration: underline; }
 
-        html, body { overflow-x: hidden !important; width: 100% !important; }
+        .currency-selector {
+            background-color: #0056b3;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .currency-selector option { background-color: #ffffff; color: #333333; }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <div>
-            <span><i class="fa-solid fa-headset"></i> دعم فني متخصص</span>
-            <span><i class="fa-solid fa-shield-halved"></i> جودة أصلية 100%</span>
-        </div>
+        <div><span><i class="fa-solid fa-headset"></i> <span data-i18n="techSupport">دعم فني متخصص</span></span></div>
+        <select id="langSelect" class="currency-selector" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية</option>
+            <option value="tr">Türkçe</option>
+        </select>
     </div>
 
     <header>
-        <div class="logo-area">
-            <a href="index.html"><img src="logo.jpg" alt="DENTA STORE Logo"></a>
-        </div>
+        <div class="logo-area"><a href="index.html"><img src="logo.jpg" alt="DENTA STORE Logo"></a></div>
     </header>
 
     <div class="page-wrapper">
         <div class="auth-card">
-            <div class="auth-title">إنشاء حساب جديد</div>
+            <div class="auth-title" data-i18n="registerTitle">إنشاء حساب جديد</div>
             
             <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" id="regName" placeholder="أدخل اسمك الكامل" required>
+                    <label data-i18n="fullNameLabel">الاسم الكامل</label>
+                    <input type="text" id="regName" placeholder="أدخل اسمك الكامل" data-i18n-placeholder="fullNamePlaceholder" required>
                 </div>
-                
                 <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="regEmail" placeholder="example@email.com" required>
+                    <label data-i18n="emailLabel">البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" placeholder="example@email.com" data-i18n-placeholder="emailPlaceholder" required>
                 </div>
-                
                 <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="regPassword" placeholder="********" required>
+                    <label data-i18n="passwordLabel">كلمة المرور</label>
+                    <input type="password" id="regPassword" placeholder="********" data-i18n-placeholder="passwordPlaceholder" required>
                 </div>
-
-                <div class="form-group" style="grid-column: 1 / -1; margin-top: 15px;">
-                    <label style="font-weight: bold; margin-bottom: 12px; display: block; color: #333;">اختر نوع العميل *</label>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        
-                        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-                            <div style="text-align: right;">
-                                <strong style="font-size: 14px; color: #333; display: block;">عميل عادي</strong>
-                                <span style="font-size: 12px; color: #776;">للعملاء الأفراد والطلبات العامة</span>
-                            </div>
-                            <input type="radio" name="customerType" value="normal" checked onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-                        </label>
-
-                        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-                            <div style="text-align: right;">
-                                <strong style="font-size: 14px; color: #333; display: block;">طالب طب أسنان</strong>
-                                <span style="font-size: 12px; color: #777;">لطلاب كليات طب الأسنان</span>
-                            </div>
-                            <input type="radio" name="customerType" value="student" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-                        </label>
-
-                        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-                            <div style="text-align: right;">
-                                <strong style="font-size: 14px; color: #333; display: block;">عيادة</strong>
-                                <span style="font-size: 12px; color: #777;">للعيادات والممارسين</span>
-                            </div>
-                            <input type="radio" name="customerType" value="clinic" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-                        </label>
-
-                        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-                            <div style="text-align: right;">
-                                <strong style="font-size: 14px; color: #333; display: block;">مخبر أسنان</strong>
-                                <span style="font-size: 12px; color: #777;">لمخابر الأسنان والفرق</span>
-                            </div>
-                            <input type="radio" name="customerType" value="lab" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-                        </label>
-
-                    </div>
+                <div class="form-group">
+                    <label data-i18n="customerTypeLabel">نوع العميل</label>
+                    <select id="regType" onchange="toggleExtraField()">
+                        <option value="normal" data-i18n="normalCustomer">عميل عادي</option>
+                        <option value="student" data-i18n="studentCustomer">طالب طب أسنان</option>
+                        <option value="clinic" data-i18n="clinicCustomer">عيادة</option>
+                        <option value="lab" data-i18n="labCustomer">مخبر أسنان</option>
+                    </select>
                 </div>
-
-                <div class="form-group" id="extraFieldContainer" style="display: none; grid-column: 1 / -1; margin-top: 15px;">
-                    <label id="extraFieldLabel" style="font-weight: bold; margin-bottom: 5px; display: block; color: #333;"></label>
-                    <input type="text" id="extraFieldValue" class="form-control" placeholder="" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                <div class="form-group" id="extraFieldContainer" style="display: none;">
+                    <label id="extraFieldLabel" data-i18n="extraFieldDefaultLabel">الحقل المطلوب</label>
+                    <input type="text" id="regExtra" placeholder="">
                 </div>
-                
-                <button type="submit" class="btn-submit">تسجيل حساب جديد</button>
+                <button type="submit" class="btn-submit" data-i18n="registerSubmitBtn">تسجيل حساب جديد</button>
             </form>
             
             <div class="auth-footer">
-                لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+                <span data-i18n="hasAccountText">لديك حساب بالفعل؟</span> <a href="login.html" data-i18n="loginLink">تسجيل الدخول</a>
             </div>
         </div>
     </div>
 
+    <script src="lang.js"></script>
+
     <script>
-        function toggleCustomerFields() {
-            const selectedType = document.querySelector('input[name="customerType"]:checked').value;
+        function toggleExtraField() {
+            const type = document.getElementById('regType').value;
             const container = document.getElementById('extraFieldContainer');
             const label = document.getElementById('extraFieldLabel');
-            const input = document.getElementById('extraFieldValue');
+            const input = document.getElementById('regExtra');
 
-            if (selectedType === 'student') {
+            if (type === 'student') {
                 container.style.display = 'block';
-                label.innerText = 'رقم الطالب الجامعي *';
-                input.placeholder = 'أدخل رقمك الجامعي';
+                label.setAttribute('data-i18n', 'studentIdLabel');
+                const currentLang = localStorage.getItem('dentaLang') || 'ar';
+                label.innerText = (currentLang === 'tr') ? translations.tr.studentIdLabel : translations.ar.studentIdLabel;
                 input.required = true;
-            } else if (selectedType === 'clinic' || selectedType === 'lab') {
+            } else if (type === 'clinic' || type === 'lab') {
                 container.style.display = 'block';
-                label.innerText = 'الرقم الضريبي أو رقم الترخيص *';
-                input.placeholder = 'أدخل الرقم الضريبي أو الترخيص';
+                label.setAttribute('data-i18n', 'taxOrLicenseLabel');
+                const currentLang = localStorage.getItem('dentaLang') || 'ar';
+                label.innerText = (currentLang === 'tr') ? translations.tr.taxOrLicenseLabel : translations.ar.taxOrLicenseLabel;
                 input.required = true;
             } else {
                 container.style.display = 'none';
                 input.required = false;
-                input.value = '';
             }
         }
 
         function handleRegister(event) {
             event.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const customerType = document.querySelector('input[name="customerType"]:checked').value;
-            const extraFieldValue = document.getElementById('extraFieldValue').value;
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const type = document.getElementById('regType').value;
+            const extraField = document.getElementById('regExtra').value.trim();
 
-            const newUser = { 
-                name, 
-                email, 
-                password, 
-                customerType, 
-                extraFieldValue 
-            };
-
-            // جلب قائمة المستخدمين الحالية أو إنشاء مصفوفة جديدة وتخزين المستخدم فيها
             let users = JSON.parse(localStorage.getItem('dentaUsers')) || [];
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
+            
+            if(users.some(u => u.email === email)) {
+                alert(translations[currentLang].emailExistsAlert);
+                return;
+            }
+
+            const newUser = { name, email, password, type, extraField };
             users.push(newUser);
             
             localStorage.setItem('dentaUsers', JSON.stringify(users));
-            localStorage.setItem('dentaRegisteredUser', JSON.stringify(newUser));
-            localStorage.setItem('dentaActiveUser', email);
+            localStorage.setItem('dentaActiveUser', JSON.stringify(newUser));
 
-            alert('تم إنشاء الحساب وحفظ بيانات العميل بنجاح!');
-            window.location.href = 'account.html';  
+            alert(translations[currentLang].registerSuccessAlert);
+            window.location.href = 'account.html';
         }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
+    }
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
+    }
+});
     </script>
 </body>
 </html>

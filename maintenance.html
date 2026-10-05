@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DENTA STORE - الصيانة وقطع الغيار</title>
+    <title data-key="maintenancePageTitle">DENTA STORE - الصيانة وقطع الغيار</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -12,16 +12,24 @@
         body { background-color: #f9f9f9; color: #333; }
         
         /* الشريط العلوي الثابت */
-        .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar { background-color: #0b1c3f; color: #fff; font-size: 13px; padding: 8px 3%; display: flex; justify-content: space-between; align-items: center; position: relative !important; height: 40px !important; }
         .top-bar div { display: flex; gap: 20px; align-items: center; }
-        .currency-selector { background: #0056b3; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer; outline: none; }
+        .currency-selector { background: #0056b3; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer; outline: none; }
+        .currency-selector option { background-color: #ffffff; color: #333333; }
+        
+        #langSelect {
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+        }
         
         /* الهيدر الرئيسي */
         header { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 15px 3%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo-area img { height: 65px; width: auto; object-fit: contain; }
         
         .search-container { flex: 0 0 45%; display: flex; border: 2px solid #0056b3; border-radius: 6px; overflow: hidden; background: #fff; }
-        .search-category-select { background: #f1f1f1; border: none; border-left: 1px solid #ddd; padding: 0 12px; font-family: 'Cairo', sans-serif; font-size: 13px; color: #333; outline: none; cursor: pointer; }
+        .search-category-select { background: #f1f1f1; border: none; border-left: 1px solid #ddd; padding: 0 12px; font-family: 'Cairo', sans-serif; font-size: 13px; color: #333; outline: none; cursor: pointer; display: none !important; }
         .search-bar { flex: 1; display: flex; }
         .search-bar input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; }
         .search-bar button { background-color: #0056b3; color: white; border: none; padding: 0 20px; cursor: pointer; }
@@ -33,12 +41,13 @@
 
         /* شريط التنقل الرئيسي */
         nav.main-nav { background-color: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 3%; display: flex; justify-content: space-between; align-items: center; }
-        .all-departments { background-color: #0056b3; color: white; padding: 12px 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .nav-links { list-style: none; display: flex; gap: 20px; }
+        .all-departments { display: none !important; }
+        .nav-links { list-style: none; display: flex; gap: 20px; flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+        .nav-links li { white-space: nowrap !important; flex-shrink: 0 !important; }
         .nav-links li a, .nav-links li span { text-decoration: none; color: #333; font-size: 13px; font-weight: 600; padding: 15px 0; display: block; transition: 0.3s; cursor: pointer; }
         .nav-links li a:hover, .nav-links li span:hover, .nav-links li a.active { color: #0056b3; }
 
-        /* مسار التنقل (Breadcrumbs) */
+        /* مسار التنقل */
         .breadcrumb-section { padding: 15px 5%; font-size: 13px; color: #666; display: flex; gap: 8px; align-items: center; }
         .breadcrumb-section a { color: #0056b3; text-decoration: none; font-weight: 600; }
 
@@ -69,144 +78,57 @@
         .subcat-card h3 { font-size: 14px; color: #0b1c3f; font-weight: bold; margin-bottom: 5px; }
         .subcat-arrow { color: #0056b3; font-size: 14px; margin-top: 10px; }
 
-        /* شريط الميزات السفلي */
-        .features-bar { margin: 20px 5%; background: white; border-radius: 8px; padding: 20px; display: flex; justify-content: space-around; border: 1px solid #e5e5e5; }
-        .feature-item { display: flex; align-items: center; gap: 15px; }
-        .feature-item i { font-size: 28px; color: #0056b3; }
-        .feature-item h4 { font-size: 14px; color: #0b1c3f; }
-        .feature-item p { font-size: 12px; color: #777; }
+        html, body { overflow-x: hidden !important; width: 100% !important; }
+        header span[id^="txt"], .top-bar span, .top-bar p { display: none !important; }
 
         @media (max-width: 768px) {
             .search-container { display: none; }
             .category-hero { flex-direction: column; text-align: center; }
-            .features-bar { flex-direction: column; gap: 15px; }
         }
-
-            
-    /* منع التمرير الأفقي للصفحة ككل */
-    html, body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-    }
-
-    /* جعل القائمة قابلة للتمرير */
-    .nav-links {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    /* منع العناصر من النزول لسطر جديد */
-    .nav-links li {
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
-
-       /* 1. حذف زر "كل الأقسام" الأزرق الكبير */
-    .all-departments, 
-    [onclick*="displayProducts('all')"] {
-        display: none !important;
-    }
-
-    /* 2. حذف قائمة "كل الأقسام" الموجودة داخل شريط البحث بدقة */
-    .search-category-select {
-        display: none !important;
-    }
-
-    
-    /* إخفاء النصوص داخل الشريط العلوي الأزرق وإبقاء الأيقونات فقط ليكون نحيفاً */
-    header span[id^="txt"],
-    .top-bar span,
-    .top-bar p {
-        display: none !important;
-    }
-
-    /* تقليل مساحات الشريط العلوي ليصبح نحيفاً وثابت الإرتفاع على الجوال واللابتوب */
-    .top-bar, 
-    header > div:first-child {
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        min-height: unset !important;
-    }
-
-
-      /* 3. ضبط الشريط العلوي وتثبيت زر البحث يميناً واللغة يساراً */
-    .top-bar {
-        position: relative !important;
-        display: flex !important;
-        align-items: center !important;
-        height: 40px !important;
-        padding: 5px 15px !important;
-    }
-
-    /* تثبيت زر اللغة في أقصى اليسار */
-    #langSelect {
-        position: absolute !important;
-        left: 10px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-    }
-
-    /* تثبيت أيقونة البحث في أقصى اليمين */
-    .mobile-search-icon {
-        position: absolute !important;
-        right: 15px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 1000;
-    }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
-   
-        <div>
-            <select class="currency-selector">
-                <option value="ar">العربية</option>
-                <option value="tr">Türkçe</option>
-            </select>
-        </div>
+    <!-- الشريط العلوي الثابت -->
+    <div class="top-bar">
+        <select id="langSelect" class="currency-selector" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية</option>
+            <option value="tr">Türkçe</option>
+        </select>
     </div>
 
     <!-- الهيدر الرئيسي الثابت -->
     <header>
         <div class="logo-area">
-            <img src="logo.jpg" alt="DENTA STORE Logo">
+            <a href="index.html"><img src="logo.jpg" alt="DENTA STORE Logo"></a>
         </div>
         
         <div class="search-container">
-            <select class="search-category-select">
-                <option value="all">كل الأقسام</option>
-                <option value="clinics">العيادات</option>
-                <option value="labs">المخابر</option>
-                <option value="maintenance" selected>الصيانة</option>
-            </select>
             <div class="search-bar">
-                <input type="text" placeholder="ابحث عن قطعة غيار، جهاز أو خدمة...">
+                <input type="text" id="searchInput" placeholder="ابحث عن قطعة غيار، جهاز أو خدمة..." data-key="searchPlaceholder">
                 <button><i class="fa-solid fa-search"></i></button>
             </div>
         </div>
-
       
         <div class="header-icons">
-          <a href="wishlist.html" style="text-decoration: none; color: inherit; display: inline-block; text-align: center; cursor: pointer;">
-    <div style="cursor: pointer;">
-        <i class="fa-solid fa-heart" style="color: #0056b3; display: block; font-size: 20px; margin-bottom: 3px;"></i>
-        <span id="txtWishlist">المفضلة</span>
-        <span class="badge" id="wishlistCount">0</span>
-    </div>
-</a>
-              
+            <a href="wishlist.html" style="text-decoration: none; color: inherit;">
+                <div>
+                    <i class="fa-solid fa-heart"></i>
+                    <span data-key="navWishlist">المفضلة</span>
+                    <span class="badge" id="wishlistCount">0</span>
+                </div>
+            </a>
             <a href="cart.html" style="text-decoration: none; color: inherit;">
-                <div style="cursor: pointer; display: inline-block; text-align: center;">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 20px; margin-bottom: 3px; display: block;"></i><span id="txtCart">السلة</span>
+                <div>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span data-key="navCart">السلة</span>
                     <span class="badge" id="cartCount">0</span>
                 </div>
             </a>
-            <a href="login.html" style="text-decoration: none; color: inherit; display: inline-block;">
-                <div style="cursor: pointer; text-align: center;">
-                    <i class="fa-solid fa-user" style="font-size: 20px; margin-bottom: 3px; display: block;"></i> <span id="txtAccount">حسابي</span>
+            <a href="login.html" style="text-decoration: none; color: inherit;">
+                <div>
+                    <i class="fa-solid fa-user"></i>
+                    <span data-key="navAccount">حسابي</span>
                 </div>
             </a>
         </div>
@@ -214,157 +136,241 @@
 
     <!-- شريط التنقل -->
     <nav class="main-nav">
-        <div class="all-departments"><i class="fa-solid fa-bars"></i> كل الأقسام</div>
         <ul class="nav-links">
-            <li><a href="index.html">الرئيسية</a></li>
-            <li><a href="#">الشركات</a></li>
-            <li><a href="#">العروض</a></li>
-            <li><a href="#">الأكثر مبيعاً</a></li>
-            <li><a href="#">جديد المنتجات</a></li>
-            <li><a href="#">خدماتنا</a></li>
-            <li><a href="#" onclick="openModal('aboutModal'); return false;" data-key="navAbout">من نحن</a></li>
-            <li><a href="javascript:void(0);" onclick="openContactModal()" data-key="navContact" style="text-decoration: none; color: inherit;">تواصل معنا</a></li>
+            <li><a href="index.html" data-key="navHome">الرئيسية</a></li>
         </ul>
     </nav>
 
     <!-- مسار التنقل (Breadcrumb) -->
     <div class="breadcrumb-section">
-        <a href="index.html">الرئيسية</a>
+        <a href="index.html" data-key="navHome">الرئيسية</a>
         <i class="fa-solid fa-chevron-left" style="font-size: 10px;"></i>
-        <span>الصيانة وقطع الغيار</span>
+        <span data-key="maintenanceBreadcrumb">الصيانة وقطع الغيار</span>
     </div>
 
     <!-- بانر القسم العلوي -->
-    <section class="category-hero">
-        <div class="category-hero-text">
-            <h1>الصيانة وقطع الغيار</h1>
-            <p>أجهزة وقطع غيار أصلية لضمان استمرار العمل في عيادتك ومخبرك بكفاءة عالية.</p>
+    <section class="category-hero" id="categoryHeroBox">
+        <div class="category-hero-text" id="heroTextBox">
+            <h1 data-key="maintenanceHeroTitle">الصيانة وقطع الغيار</h1>
+            <p data-key="maintenanceHeroDesc">أجهزة وقطع غيار أصلية لضمان استمرار العمل في عيادتك ومخبرك بكفاءة عالية.</p>
         </div>
     </section>
 
     <!-- عنوان تصفح التصنيفات -->
-    <h2 class="section-heading-center">تصفح التصنيفات</h2>
+    <h2 class="section-heading-center" data-key="browseCategoriesHeading">تصفح التصنيفات</h2>
 
     <!-- شبكة التصنيفات الفرعية للصيانة -->
-    <div class="subcategories-container">
-
-       <div id="subcategoriesContainer" class="row">
-    <!-- سيتم تعبئتها تلقائياً من لوحة التحكم -->
-</div>
-
+    <div class="subcategories-container" id="subcategoriesContainer">
+        <!-- سيتم تعبئتها تلقائياً -->
     </div>
 
-  
+    <!-- ملف الترجمة العام -->
+    <script src="lang.js"></script>
 
-   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. جلب البيانات من المفاتيح الموحدة
-        const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
-        const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
-        
-        // 2. تحديث عداد المفضلة
-        const wBadge = document.getElementById('wishlistCount');
-        if (wBadge) wBadge.textContent = wishlist.length;
+    <script>
+        if (typeof translations === 'undefined') { window.translations = {}; }
+        if (!translations['tr']) translations['tr'] = {};
+        if (!translations['ar']) translations['ar'] = {};
 
-        // 3. تحديث عداد السلة (حساب مجموع الكميات)
-        const cBadge = document.getElementById('cartCount');
-        if (cBadge) {
-            const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-            cBadge.textContent = totalQty;
-        }
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // تحديث العدادات
-        const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
-        const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
-        
-        const wBadge = document.getElementById('wishlistCount');
-        if (wBadge) wBadge.textContent = wishlist.length;
-
-        const cBadge = document.getElementById('cartCount');
-        if (cBadge) {
-            const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-            cBadge.textContent = totalQty;
-        }
-
-        // استدعاء تصنيفات الصيانة
-        loadDynamicSubcategories('maintenance'); 
-    });
-
-    function loadDynamicSubcategories(sectionKey) {
-        const container = document.getElementById('subcategoriesContainer');
-        if (!container) return;
-
-        let allSubcategories = JSON.parse(localStorage.getItem('dentaSubcategories')) || {
-            'clinics': [],
-            'labs': [],
-            'maintenance': []
+        const extraTranslations = {
+            ar: {
+                maintenancePageTitle: "DENTA STORE - الصيانة وقطع الغيار",
+                navWishlist: "المفضلة",
+                navCart: "السلة",
+                navAccount: "حسابي",
+                navHome: "الرئيسية",
+                navBrands: "الشركات",
+                navOffers: "العروض",
+                navBestSellers: "الأكثر مبيعاً",
+                navNewProducts: "جديد المنتجات",
+                navAbout: "من نحن",
+                navContact: "تواصل معنا",
+                maintenanceBreadcrumb: "الصيانة وقطع الغيار",
+                maintenanceHeroTitle: "الصيانة وقطع الغيار",
+                maintenanceHeroDesc: "أجهزة وقطع غيار أصلية لضمان استمرار العمل في عيادتك ومخبرك بكفاءة عالية.",
+                browseCategoriesHeading: "تصفح التصنيفات",
+                searchPlaceholder: "ابحث عن قطعة غيار، جهاز أو خدمة...",
+                noSubcategories: "لا توجد تصنيفات مضافة حالياً.",
+                notAvailable: "غير متوفر حالياً",
+                notAvailableAlert: "عذراً، هذا التصنيف غير متوفر حالياً.",
+                modalAboutTitle: "من نحن",
+                modalAboutDesc: "شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.",
+                modalAboutCloseBtn: "إغلاق"
+            },
+            tr: {
+                maintenancePageTitle: "DENTA STORE - Bakım ve Yedek Parça",
+                navWishlist: "Favoriler",
+                navCart: "Sepet",
+                navAccount: "Hesabım",
+                navHome: "Ana Sayfa",
+                navBrands: "Markalar",
+                navOffers: "Kampanyalar",
+                navBestSellers: "Çok Satanlar",
+                navNewProducts: "Yeni Ürünler",
+                navAbout: "Hakkımızda",
+                navContact: "İletişim",
+                maintenanceBreadcrumb: "Bakım ve Yedek Parça",
+                maintenanceHeroTitle: "Bakım ve Yedek Parça",
+                maintenanceHeroDesc: "Klinik ve laboratuvarınızda kesintisiz çalışma sağlamak için orijinal cihazlar ve yedek parçalar.",
+                browseCategoriesHeading: "Kategorilere Göz At",
+                searchPlaceholder: "Yedek parça, cihaz veya hizmet arayın...",
+                noSubcategories: "Şu anda eklenmiş kategori bulunmuyor.",
+                notAvailable: "Şu anda mevcut değil",
+                notAvailableAlert: "Üzgünüz, bu kategori şu anda mevcut değil.",
+                modalAboutTitle: "Hakkımızda",
+                modalAboutDesc: "Diş hekimliği malzemeleri ve ekipmanları tedariğinde öncü şirket, T.C. Sağlık Bakanlığı onaylıdır. Merkezimiz İstanbul'da olup, tıbbi başarınızı desteklemek için dünyanın çoğu ülkesine uzanan geniş bir şube ağımız bulunmaktadır.",
+                modalAboutCloseBtn: "Kapat"
+            }
         };
 
-        let currentList = allSubcategories[sectionKey] || [];
-        container.innerHTML = '';
-
-        if (currentList.length === 0) {
-            container.innerHTML = `<p style="text-align:center; width:100%; color:#777; padding:20px;">لا توجد تصنيفات مضافة حالياً.</p>`;
-            return;
-        }
-
-        currentList.forEach(sub => {
-            let card = document.createElement('div');
-            card.className = 'subcat-card';
-
-            if (sub.available === false || sub.available === 'false') {
-                card.style.opacity = '0.7';
-                card.innerHTML = `
-                    <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
-                    <h3>${sub.name}</h3>
-                    <span style="color: #ff4d4d; font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">غير متوفر حالياً</span>
-                `;
-                card.onclick = function() {
-                    alert('عذراً، هذا التصنيف غير متوفر حالياً.');
-                };
-            } else {
-                card.innerHTML = `
-                    <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
-                    <h3>${sub.name}</h3>
-                    <i class="fa-solid fa-chevron-left subcat-arrow"></i>
-                `;
-                // الانتقال لصفحة المنتجات الخاصة بهذا التصنيف
-                card.onclick = function() {
-                    window.location.href = 'product.html?category=' + encodeURIComponent(sub.name);
-                };
+        for (let lang in extraTranslations) {
+            for (let key in extraTranslations[lang]) {
+                if (!translations[lang][key]) {
+                    translations[lang][key] = extraTranslations[lang][key];
+                }
             }
-            container.appendChild(card);
-        });
-    }
-</script>
-
-<script>
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // إغلاق النافذة عند الضغط في أي مكان خارجها
-    window.onclick = function(event) {
-        if (event.target.id === 'aboutModal' || event.target.id === 'servicesModal') {
-            event.target.style.display = 'none';
         }
-    }
-</script>
 
-<div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
-        <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
-        <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
-        <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
+        function changeLanguage(lang) {
+            localStorage.setItem('dentaLang', lang);
+            applyLanguage(lang);
+            loadDynamicSubcategories('maintenance');
+        }
+
+        function applyLanguage(lang) {
+            if (!translations[lang]) return;
+
+            const htmlRoot = document.getElementById('htmlRoot');
+            htmlRoot.setAttribute('lang', lang);
+            htmlRoot.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            // تعديل محاذاة البانر العلوي حسب اللغة
+            const heroTextBox = document.getElementById('heroTextBox');
+            if (heroTextBox) {
+                heroTextBox.style.textAlign = lang === 'ar' ? 'right' : 'left';
+                heroTextBox.style.left = lang === 'ar' ? 'auto' : '50px';
+                heroTextBox.style.right = lang === 'ar' ? '50px' : 'auto';
+            }
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && translations[lang]['searchPlaceholder']) {
+                searchInput.placeholder = translations[lang]['searchPlaceholder'];
+            }
+
+            const langSelect = document.getElementById('langSelect');
+            if (langSelect) langSelect.value = lang;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const savedLang = localStorage.getItem('dentaLang') || 'ar';
+            applyLanguage(savedLang);
+
+            const wishlist = JSON.parse(localStorage.getItem('dentaWishlist') || '[]');
+            const cart = JSON.parse(localStorage.getItem('dentaCart') || '[]');
+            
+            const wBadge = document.getElementById('wishlistCount');
+            if (wBadge) wBadge.textContent = wishlist.length;
+
+            const cBadge = document.getElementById('cartCount');
+            if (cBadge) {
+                cBadge.textContent = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            }
+
+            loadDynamicSubcategories('maintenance'); 
+        });
+
+        function loadDynamicSubcategories(sectionKey) {
+            const container = document.getElementById('subcategoriesContainer');
+            if (!container) return;
+
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
+            let allSubcategories = JSON.parse(localStorage.getItem('dentaSubcategories')) || {
+                'clinics': [],
+                'labs': [],
+                'maintenance': []
+            };
+
+            let currentList = allSubcategories[sectionKey] || [];
+            container.innerHTML = '';
+
+            if (currentList.length === 0) {
+                const noText = translations[currentLang]['noSubcategories'] || 'لا توجد تصنيفات مضافة حالياً.';
+                container.innerHTML = `<p style="text-align:center; width:100%; color:#777; padding:20px;">${noText}</p>`;
+                return;
+            }
+
+            currentList.forEach(sub => {
+                let card = document.createElement('div');
+                card.className = 'subcat-card';
+
+                if (sub.available === false || sub.available === 'false') {
+                    const notAvailText = translations[currentLang]['notAvailable'] || 'غير متوفر حالياً';
+                    card.style.opacity = '0.7';
+                    card.innerHTML = `
+                        <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
+                        <h3>${sub.name}</h3>
+                        <span style="color: #ff4d4d; font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">${notAvailText}</span>
+                    `;
+                    card.onclick = function() {
+                        const alertText = translations[currentLang]['notAvailableAlert'] || 'عذراً، هذا التصنيف غير متوفر حالياً.';
+                        alert(alertText);
+                    };
+                } else {
+                    card.innerHTML = `
+                        <img src="${sub.image || 'https://via.placeholder.com/150'}" alt="${sub.name}">
+                        <h3>${sub.name}</h3>
+                        <i class="fa-solid ${currentLang === 'ar' ? 'fa-chevron-left' : 'fa-chevron-right'} subcat-arrow"></i>
+                    `;
+                    card.onclick = function() {
+                        window.location.href = 'product.html?category=' + encodeURIComponent(sub.name);
+                    };
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        
+        window.onclick = function(event) {
+            if (event.target.id === 'aboutModal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
+    }
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
+    }
+});
+    </script>
+
+    <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+        <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;" id="aboutModalBox">
+            <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
+            <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
+            <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
+        </div>
     </div>
-</div>
 </body>
 </html>

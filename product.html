@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">DENTA STORE - المنتجات</title>
+    <title data-key="productsPageTitle">DENTA STORE - المنتجات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -60,93 +60,91 @@
         .btn-details { background: #f1f1f1; color: #333; border: 1px solid #ddd; }
         .not-found { text-align: center; padding: 50px; font-size: 18px; color: #777; width: 100%; grid-column: 1 / -1; }
 
+        /* منع التمرير الأفقي للصفحة ككل */
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+        }
 
+        /* جعل القائمة قابلة للتمرير */
+        .nav-links {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
 
-        
-    /* منع التمرير الأفقي للصفحة ككل */
-    html, body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-    }
+        .nav-links li {
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
 
-    /* جعل القائمة قابلة للتمرير */
-    .nav-links {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
+        .all-departments, 
+        [onclick*="displayProducts('all')"] {
+            display: none !important;
+        }
 
-    /* منع العناصر من النزول لسطر جديد */
-    .nav-links li {
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
+        .search-category-select {
+            display: none !important;
+        }
 
+        header span[id^="txt"],
+        .top-bar span,
+        .top-bar p {
+            display: none !important;
+        }
 
-   /* 1. حذف زر "كل الأقسام" الأزرق الكبير */
-    .all-departments, 
-    [onclick*="displayProducts('all')"] {
-        display: none !important;
-    }
+        .top-bar, 
+        header > div:first-child {
+            padding-top: 6px !important;
+            padding-bottom: 6px !important;
+            min-height: unset !important;
+        }
 
-    /* 2. حذف قائمة "كل الأقسام" الموجودة داخل شريط البحث بدقة */
-    .search-category-select {
-        display: none !important;
-    }
+        .top-bar {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            height: 40px !important;
+            padding: 5px 15px !important;
+        }
 
-    
-    /* إخفاء النصوص داخل الشريط العلوي الأزرق وإبقاء الأيقونات فقط ليكون نحيفاً */
-    header span[id^="txt"],
-    .top-bar span,
-    .top-bar p {
-        display: none !important;
-    }
+        #langSelect {
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+        }
 
-    /* تقليل مساحات الشريط العلوي ليصبح نحيفاً وثابت الإرتفاع على الجوال واللابتوب */
-    .top-bar, 
-    header > div:first-child {
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        min-height: unset !important;
-    }
+        .currency-selector {
+            background-color: #0056b3;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
 
-     /* 3. ضبط الشريط العلوي وتثبيت زر البحث يميناً واللغة يساراً */
-    .top-bar {
-        position: relative !important;
-        display: flex !important;
-        align-items: center !important;
-        height: 40px !important;
-        padding: 5px 15px !important;
-    }
-
-    /* تثبيت زر اللغة في أقصى اليسار */
-    #langSelect {
-        position: absolute !important;
-        left: 10px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-    }
-
-    /* تثبيت أيقونة البحث في أقصى اليمين */
-    .mobile-search-icon {
-        position: absolute !important;
-        right: 15px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 1000;
-    }
+        .currency-selector option {
+            background-color: #ffffff;
+            color: #333333;
+        }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
     <!-- التبار العلوي الثابت -->
     <div class="top-bar">
         <div>
-            <span><i class="fa-solid fa-headset"></i> دعم فني متخصص</span>
-            <span><i class="fa-solid fa-shield-halved"></i> جودة أصلية 100%</span>
+            <select id="langSelect" class="currency-selector" onchange="changeLanguage(this.value)">
+                <option value="ar">العربية</option>
+                <option value="tr">Türkçe</option>
+            </select>
         </div>
-        
     </div>
 
     <!-- الهيدر الرئيسي -->
@@ -159,21 +157,21 @@
             <a href="wishlist.html" style="text-decoration: none; color: inherit;">
                 <div>
                     <i class="fa-solid fa-heart"></i>
-                    <span>المفضلة</span>
+                    <span data-key="navWishlist">المفضلة</span>
                     <span class="badge" id="wishlistCount">0</span>
                 </div>
             </a>
             <a href="cart.html" style="text-decoration: none; color: inherit;">
                 <div>
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span>السلة</span>
+                    <span data-key="navCart">السلة</span>
                     <span class="badge" id="cartCount">0</span>
                 </div>
             </a>
             <a href="login.html" style="text-decoration: none; color: inherit;">
                 <div>
                     <i class="fa-solid fa-user"></i>
-                    <span>حسابي</span>
+                    <span data-key="navAccount">حسابي</span>
                 </div>
             </a>
         </div>
@@ -181,21 +179,18 @@
 
     <!-- شريط التنقل الرئيسي -->
     <nav class="main-nav">
-        <div class="all-departments" onclick="location.href='index.html'"><i class="fa-solid fa-bars"></i> كل الأقسام</div>
+        <div class="all-departments" onclick="location.href='index.html'"><i class="fa-solid fa-bars"></i> <span data-key="allDepartments">كل الأقسام</span></div>
         <ul class="nav-links">
-            <li><a href="index.html">الرئيسية</a></li>
-            <li><a href="index.html">الشركات</a></li>
-            <li><a href="index.html">العروض</a></li>
-            <li><a href="index.html">الأكثر مبيعاً</a></li>
-            <li><a href="#" onclick="openModal('aboutModal'); return false;" data-key="navAbout">من نحن</a></li>
+            <li><a href="index.html" data-key="navHome">الرئيسية</a></li>
+            <li><a href="product.html" style="color: #0056b3;" data-key="navProducts">جميع المنتجات</a></li>
         </ul>
     </nav>
 
     <!-- محتوى صفحة المنتجات -->
     <div class="products-wrapper">
         <div class="page-header-title">
-            <span id="sectionTitle">جميع المنتجات</span>
-            <a href="index.html" style="font-size: 14px; color: #0056b3; text-decoration: none;"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</a>
+            <span id="sectionTitle" data-key="allProductsTitle">جميع المنتجات</span>
+            <a href="index.html" style="font-size: 14px; color: #0056b3; text-decoration: none;"><i class="fa-solid fa-arrow-right"></i> <span data-key="backToHome">العودة للرئيسية</span></a>
         </div>
         
         <div class="products-grid" id="productsGrid">
@@ -203,8 +198,100 @@
         </div>
     </div>
 
+    <!-- ملف الترجمة العام -->
+    <script src="lang.js"></script>
+
     <script>
-        // تحديث أعداد السلة والمفضلة في الهيدر
+        // إضافات احتياطية لضمان الترجمة الفورية
+        if (typeof translations === 'undefined') {
+            window.translations = {};
+        }
+        
+        if (!translations['tr']) translations['tr'] = {};
+        if (!translations['ar']) translations['ar'] = {};
+
+        const extraTranslations = {
+            ar: {
+                productsPageTitle: "DENTA STORE - المنتجات",
+                navWishlist: "المفضلة",
+                navCart: "السلة",
+                navAccount: "حسابي",
+                allDepartments: "كل الأقسام",
+                navHome: "الرئيسية",
+                navBrands: "الشركات",
+                navOffers: "العروض",
+                navBestSellers: "الأكثر مبيعاً",
+                navNewProducts: "جديد المنتجات",
+                navAbout: "من نحن",
+                allProductsTitle: "جميع المنتجات",
+                backToHome: "العودة للرئيسية",
+                cartBtnText: "سلة",
+                addCartText: "إضافة للسلة",
+                productDescTitle: "وصف المنتج:",
+                noDescText: "لا يوجد وصف تفصيلي متاحة لهذا المنتج حالياً.",
+                noProductsText: "عذراً، لا توجد منتجات متاحة حالياً.",
+                modalAboutTitle: "من نحن",
+                modalAboutDesc: "شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.",
+                modalAboutCloseBtn: "إغلاق"
+            },
+            tr: {
+                productsPageTitle: "DENTA STORE - Ürünler",
+                navWishlist: "Favoriler",
+                navCart: "Sepet",
+                navAccount: "Hesabım",
+                allDepartments: "Tüm Kategoriler",
+                navHome: "Ana Sayfa",
+                navBrands: "Markalar",
+                navOffers: "Kampanyalar",
+                navBestSellers: "Çok Satanlar",
+                navNewProducts: "Yeni Ürünler",
+                navAbout: "Hakkımızda",
+                allProductsTitle: "Tüm Ürünler",
+                backToHome: "Ana Sayfaya Dön",
+                cartBtnText: "Sepet",
+                addCartText: "Sepete Ekle",
+                productDescTitle: "Ürün Açıklaması:",
+                noDescText: "Bu ürün için şu anda detaylı açıklama bulunmamaktadır.",
+                noProductsText: "Üzgünüz, şu anda mevcut ürün bulunmamaktadır.",
+                modalAboutTitle: "Hakkımızda",
+                modalAboutDesc: "Diş hekimliği malzemeleri ve ekipmanları tedariğinde öncü şirket, T.C. Sağlık Bakanlığı onaylıdır. Merkezimiz İstanbul'da olup, tıbbi başarınızı desteklemek için dünyanın çoğu ülkesine uzanan geniş bir şube ağımız bulunmaktadır.",
+                modalAboutCloseBtn: "Kapat"
+            }
+        };
+
+        for (let lang in extraTranslations) {
+            for (let key in extraTranslations[lang]) {
+                if (!translations[lang][key]) {
+                    translations[lang][key] = extraTranslations[lang][key];
+                }
+            }
+        }
+
+        function changeLanguage(lang) {
+            localStorage.setItem('dentaLang', lang);
+            applyLanguage(lang);
+            // إعادة عرض المنتجات لتحديث النصوص الديناميكية مثل زر السلة والوصف
+            loadPageContent();
+        }
+
+        function applyLanguage(lang) {
+            if (!translations[lang]) return;
+
+            const htmlRoot = document.getElementById('htmlRoot');
+            htmlRoot.setAttribute('lang', lang);
+            htmlRoot.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            const langSelect = document.getElementById('langSelect');
+            if (langSelect) langSelect.value = lang;
+        }
+
         function updateBadges() {
             const cart = JSON.parse(localStorage.getItem('dentaCart')) || [];
             const wishlist = JSON.parse(localStorage.getItem('dentaWishlist')) || [];
@@ -212,15 +299,18 @@
             document.getElementById('wishlistCount').innerText = wishlist.length;
         }
 
-        // دالة عرض المنتجات في الشبكة
         function renderProducts(productsToDisplay) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
+            const cartText = translations[currentLang]['cartBtnText'] || 'سلة';
 
             if (!productsToDisplay || productsToDisplay.length === 0) {
-                grid.innerHTML = `<div class="not-found">عذراً، لا توجد منتجات متاحة حالياً.</div>`;
+                const noProd = translations[currentLang]['noProductsText'] || 'عذراً، لا توجد منتجات متاحة حالياً.';
+                grid.innerHTML = `<div class="not-found">${noProd}</div>`;
                 return;
             }
+
             productsToDisplay.forEach((product, originalIndex) => {
                 const wishlist = JSON.parse(localStorage.getItem('dentaWishlist')) || [];
                 const isInWishlist = wishlist.some(item => item.name === product.name);
@@ -231,13 +321,13 @@
                     <div class="product-card">
                         <a href="product.html?id=${originalIndex}" style="text-decoration: none; color: inherit;">
                             <img src="${product.image || 'https://via.placeholder.com/200'}" alt="${product.name}">
-                            <span class="brand-tag">${product.brand || 'عام'}</span>
+                            <span class="brand-tag">${product.brand || (currentLang === 'tr' ? 'Genel' : 'عام')}</span>
                             <h3>${product.name}</h3>
                             <div class="price">${product.price} €</div>
                         </a>
                         <div class="product-card-actions">
                             <button class="btn-cart" onclick="addToCart('${encodeURIComponent(product.name)}', ${product.price}, '${product.image || ''}')">
-                                <i class="fa-solid fa-cart-shopping"></i> سلة
+                                <i class="fa-solid fa-cart-shopping"></i> ${cartText}
                             </button>
                             <button class="btn-wishlist" onclick="toggleWishlist('${productJson}', this)" style="background: white; border: 1px solid #dc3545; color: #dc3545; border-radius: 6px; padding: 8px 12px; cursor: pointer;">
                                 <i class="${heartClass}" style="color: #dc3545;"></i>
@@ -248,9 +338,9 @@
             });
         }
 
-        // معالجة التحميل والتحقق مما إذا كان المطلوب عرض منتج مفرد أو قائمة منتجات
-        window.addEventListener('DOMContentLoaded', () => {
+        function loadPageContent() {
             updateBadges();
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
 
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
@@ -258,43 +348,46 @@
             const selectedCategory = urlParams.get('category');
             const allProducts = JSON.parse(localStorage.getItem('dentaProducts')) || [];
 
-            // إذا كان هناك id محدد، اعرض تفاصيل المنتج المفرد بالتصميم المطلوب
             if (productId !== null && allProducts[productId]) {
                 const product = allProducts[productId];
-                document.getElementById('sectionTitle').innerText = "تفاصيل المنتج";
+                document.getElementById('sectionTitle').innerText = currentLang === 'tr' ? 'Ürün Detayları' : 'تفاصيل المنتج';
                 
                 const grid = document.getElementById('productsGrid');
-                grid.style.display = "block"; // إلغاء الشبكة لعرض الكارد الممتد
+                grid.style.display = "block";
                 
-                // تحديد حالة المفضلة لزر الإعجاب في صفحة التفاصيل
                 const wishlist = JSON.parse(localStorage.getItem('dentaWishlist')) || [];
                 const isInWishlist = wishlist.some(item => item.name === product.name);
                 const heartClass = isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
                 const productJson = encodeURIComponent(JSON.stringify(product));
 
+                const addCartStr = translations[currentLang]['addCartText'] || 'إضافة للسلة';
+                const descTitleStr = translations[currentLang]['productDescTitle'] || 'وصف المنتج:';
+                const noDescStr = translations[currentLang]['noDescText'] || 'لا يوجد وصف تفصيلي متاحة لهذا المنتج حالياً.';
+                const catLabel = currentLang === 'tr' ? 'Kategori:' : 'التصنيف:';
+                const defaultCat = currentLang === 'tr' ? 'Klinik Malzemeleri' : 'مستلزمات العيادات';
+
                 grid.innerHTML = `
-                    <div style="background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 30px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                    <div style="background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 30px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; box-shadow: 0 4px 20px rgba(0,0,0,0.04); direction: ${currentLang === 'ar' ? 'rtl' : 'ltr'}; text-align: ${currentLang === 'ar' ? 'right' : 'left'};">
                         
-                        <!-- معلومات المنتج والأسعار على اليمين -->
-                        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 15px; text-align: right;">
+                        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 15px;">
                             <h1 style="color: #0b1c3f; font-size: 26px; font-weight: bold; margin: 0;">${product.name}</h1>
                             
                             <div>
                                 <span style="background: #eef2f7; color: #0056b3; padding: 5px 12px; border-radius: 6px; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
-                                    🏷️ التصنيف: ${product.category || 'مستلزمات العيادات'}
+                                    🏷️ ${catLabel} ${product.category || defaultCat}
                                 </span>
                             </div>
                             
                             <div style="color: #0056b3; font-weight: bold; font-size: 24px;">${product.price} €</div>
                             
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-right: 4px solid #0056b3;">
-                                <p style="color: #333; font-weight: bold; font-size: 14px; margin-bottom: 5px;">وصف المنتج:</p>
-                                <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">${product.description || 'لا يوجد وصف تفصيلي متاحة لهذا المنتج حالياً.'}</p>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; ${currentLang === 'ar' ? 'border-right: 4px solid #0056b3;' : 'border-left: 4px solid #0056b3;'}">
+                                <p style="color: #333; font-weight: bold; font-size: 14px; margin-bottom: 5px;">${descTitleStr}</p>
+                                <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">${product.description || noDescStr}</p>
                             </div>
                             
                             <div style="display: flex; gap: 12px; margin-top: 10px;">
                                 <button onclick="addToCart('${encodeURIComponent(product.name)}', ${product.price}, '${product.image || ''}')" style="flex: 1; background: #0056b3; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                    <i class="fa-solid fa-cart-shopping"></i> إضافة للسلة
+                                    <i class="fa-solid fa-cart-shopping"></i> ${addCartStr}
                                 </button>
                                 <button onclick="toggleWishlist('${productJson}', this)" style="background: white; border: 1px solid #dc3545; color: #dc3545; border-radius: 8px; padding: 12px 18px; cursor: pointer; font-size: 18px;">
                                     <i class="${heartClass}"></i>
@@ -302,7 +395,6 @@
                             </div>
                         </div>
 
-                        <!-- صورة المنتج على اليسار -->
                         <div style="flex: 1; min-width: 280px; text-align: center;">
                             <img src="${product.image || 'https://via.placeholder.com/350'}" alt="${product.name}" style="width: 100%; max-height: 350px; object-fit: contain;">
                         </div>
@@ -311,14 +403,14 @@
                 `;
             } 
             else if (selectedBrand) {
-                document.getElementById('sectionTitle').innerText = `منتجات شركة: ${selectedBrand}`;
+                document.getElementById('sectionTitle').innerText = (currentLang === 'tr' ? 'Marka Ürünleri: ' : 'منتجات شركة: ') + selectedBrand;
                 const filtered = allProducts.filter(p => 
                     p.brand && p.brand.trim().toLowerCase() === selectedBrand.trim().toLowerCase()
                 );
                 renderProducts(filtered);
             } 
             else if (selectedCategory) {
-                document.getElementById('sectionTitle').innerText = `تصنيف: ${selectedCategory}`;
+                document.getElementById('sectionTitle').innerText = (currentLang === 'tr' ? 'Kategori: ' : 'تصنيف: ') + selectedCategory;
                 const filtered = allProducts.filter(p => {
                     const subCat = (p.subCategory || '').trim().toLowerCase();
                     const cat = (p.category || '').trim().toLowerCase();
@@ -328,73 +420,94 @@
                 renderProducts(filtered);
             } 
             else {
-                document.getElementById('sectionTitle').innerText = 'جميع المنتجات';
+                document.getElementById('sectionTitle').innerText = translations[currentLang]['allProductsTitle'] || 'جميع المنتجات';
                 renderProducts(allProducts);
             }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('dentaLang') || 'ar';
+            applyLanguage(savedLang);
+            loadPageContent();
         });
 
-        // دالة الإضافة للسلة
-       function addToCart(name, price, image) {
-    if (!checkUserBeforeAction()) return;
+        function addToCart(name, price, image) {
+            let cart = JSON.parse(localStorage.getItem('dentaCart')) || [];
+            let decodedName = decodeURIComponent(name);
+            let existing = cart.find(item => item.name === decodedName);
 
-    let cart = JSON.parse(localStorage.getItem('dentaCart')) || [];
-    let decodedName = decodeURIComponent(name);
-    let existing = cart.find(item => item.name === decodedName);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ name: decodedName, price: price, image: image, quantity: 1 });
+            }
 
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ name: decodedName, price: price, image: image, quantity: 1 });
-    }
-
-    localStorage.setItem('dentaCart', JSON.stringify(cart));
-    updateBadges();
-    alert('تمت إضافة المنتج إلى السلة بنجاح');
-}
-
-function toggleWishlist(encodedProduct, buttonElement) {
-    if (!checkUserBeforeAction()) return;
-
-    const product = JSON.parse(decodeURIComponent(encodedProduct));
-    let wishlist = JSON.parse(localStorage.getItem('dentaWishlist')) || [];
-    
-    let index = wishlist.findIndex(item => item.name === product.name);
-    const icon = buttonElement.querySelector('i');
-
-    if (index > -1) {
-        wishlist.splice(index, 1);
-        if (icon) icon.className = 'fa-regular fa-heart';
-    } else {
-        wishlist.push(product);
-        if (icon) icon.className = 'fa-solid fa-heart';
-    }
-
-    localStorage.setItem('dentaWishlist', JSON.stringify(wishlist));
-    updateBadges();
-}
-  
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // إغلاق النافذة عند الضغط في أي مكان خارجها
-    window.onclick = function(event) {
-        if (event.target.id === 'aboutModal' || event.target.id === 'servicesModal') {
-            event.target.style.display = 'none';
+            localStorage.setItem('dentaCart', JSON.stringify(cart));
+            updateBadges();
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
+            alert(currentLang === 'tr' ? 'Ürün sepete başarıyla eklendi' : 'تمت إضافة المنتج إلى السلة بنجاح');
         }
+
+        function toggleWishlist(encodedProduct, buttonElement) {
+            const product = JSON.parse(decodeURIComponent(encodedProduct));
+            let wishlist = JSON.parse(localStorage.getItem('dentaWishlist')) || [];
+            
+            let index = wishlist.findIndex(item => item.name === product.name);
+            const icon = buttonElement.querySelector('i');
+
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                if (icon) icon.className = 'fa-regular fa-heart';
+            } else {
+                wishlist.push(product);
+                if (icon) icon.className = 'fa-solid fa-heart';
+            }
+
+            localStorage.setItem('dentaWishlist', JSON.stringify(wishlist));
+            updateBadges();
+        }
+     
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.id === 'aboutModal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
     }
-</script>
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
+    }
+});
+    </script>
 
     <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;">
-        <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
-        <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
-        <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
+        <div style="background:white; padding:30px; border-radius:10px; width:500px; max-width:90%; text-align: right;" id="aboutModalBox">
+            <h3 style="color:#002D62; margin-bottom: 15px;" data-key="modalAboutTitle">من نحن</h3>
+            <p style="line-height: 1.7; color:#444;" data-key="modalAboutDesc">شركة رائدة في توفير مواد ومستلزمات طب الأسنان، معتمدة رسمياً من وزارة الصحة التركية. يقع مقرنا الرئيسي في إسطنبول، ولدينا شبكة فروع واسعة تمتد في أغلب دول العالم لنكون دائماً الأقرب إليكم ونساند نجاحكم الطبي.</p>
+            <button onclick="closeModal('aboutModal')" style="margin-top: 20px; padding: 8px 20px; background:#002D62; color:white; border: none; border-radius: 5px; cursor: pointer;" data-key="modalAboutCloseBtn">إغلاق</button>
+        </div>
     </div>
-</div>
 </body>
 </html>

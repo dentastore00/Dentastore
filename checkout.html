@@ -105,32 +105,10 @@
             .order-type-group, .payment-type-group { flex-direction: column; gap: 10px; }
         }
 
-           /* 1. حذف زر "كل الأقسام" الأزرق الكبير */
-    .all-departments, 
-    [onclick*="displayProducts('all')"] {
-        display: none !important;
-    }
-
-    /* 2. حذف قائمة "كل الأقسام" الموجودة داخل شريط البحث بدقة */
-    .search-category-select {
-        display: none !important;
-    }
-
-    
-    /* إخفاء النصوص داخل الشريط العلوي الأزرق وإبقاء الأيقونات فقط ليكون نحيفاً */
-    header span[id^="txt"],
-    .top-bar span,
-    .top-bar p {
-        display: none !important;
-    }
-
-    /* تقليل مساحات الشريط العلوي ليصبح نحيفاً وثابت الإرتفاع على الجوال واللابتوب */
-    .top-bar, 
-    header > div:first-child {
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        min-height: unset !important;
-    }
+        .all-departments, [onclick*="displayProducts('all')"] { display: none !important; }
+        .search-category-select { display: none !important; }
+        header span[id^="txt"], .top-bar span, .top-bar p { display: none !important; }
+        .top-bar, header > div:first-child { padding-top: 6px !important; padding-bottom: 6px !important; min-height: unset !important; }
     </style>
 </head>
 <body>
@@ -223,56 +201,52 @@
             </div>
 
             <div class="form-group" style="grid-column: 1 / -1; margin-top: 15px;">
-    <label style="font-weight: bold; margin-bottom: 12px; display: block; color: #333;">اختر نوع العميل *</label>
-    
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        
-        <!-- عميل عادي -->
-        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-            <div style="text-align: right;">
-                <strong style="font-size: 14px; color: #333; display: block;">عميل عادي</strong>
-                <span style="font-size: 12px; color: #776;">للعملاء الأفراد والطلبات العامة</span>
+                <label style="font-weight: bold; margin-bottom: 12px; display: block; color: #333;" data-translate="customerTypeLabel">اختر نوع العميل *</label>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- عميل عادي -->
+                    <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
+                        <div style="text-align: right;">
+                            <strong style="font-size: 14px; color: #333; display: block;" data-translate="typeNormal">عميل عادي</strong>
+                            <span style="font-size: 12px; color: #776;" data-translate="descNormal">للعملاء الأفراد والطلبات العامة</span>
+                        </div>
+                        <input type="radio" name="customerType" value="normal" checked onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
+                    </label>
+
+                    <!-- طالب طب أسنان -->
+                    <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
+                        <div style="text-align: right;">
+                            <strong style="font-size: 14px; color: #333; display: block;" data-translate="typeStudent">طالب طب أسنان</strong>
+                            <span style="font-size: 12px; color: #777;" data-translate="descStudent">لطلاب كليات طب الأسنان</span>
+                        </div>
+                        <input type="radio" name="customerType" value="student" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
+                    </label>
+
+                    <!-- عيادة -->
+                    <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
+                        <div style="text-align: right;">
+                            <strong style="font-size: 14px; color: #333; display: block;" data-translate="typeClinic">عيادة</strong>
+                            <span style="font-size: 12px; color: #777;" data-translate="descClinic">للعيادات والممارسين</span>
+                        </div>
+                        <input type="radio" name="customerType" value="clinic" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
+                    </label>
+
+                    <!-- مخبر أسنان -->
+                    <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
+                        <div style="text-align: right;">
+                            <strong style="font-size: 14px; color: #333; display: block;" data-translate="typeLab">مخبر أسنان</strong>
+                            <span style="font-size: 12px; color: #777;" data-translate="descLab">لمخابر الأسنان والفرق</span>
+                        </div>
+                        <input type="radio" name="customerType" value="lab" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
+                    </label>
+                </div>
             </div>
-            <input type="radio" name="customerType" value="normal" checked onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-        </label>
 
-        <!-- طالب طب أسنان -->
-        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-            <div style="text-align: right;">
-                <strong style="font-size: 14px; color: #333; display: block;">طالب طب أسنان</strong>
-                <span style="font-size: 12px; color: #777;">لطلاب كليات طب الأسنان</span>
+            <!-- الحقل الديناميكي (لرقم الطالب أو الرقم الضريبي) -->
+            <div class="form-group" id="extraFieldContainer" style="display: none; grid-column: 1 / -1; margin-top: 15px;">
+                <label id="extraFieldLabel" style="font-weight: bold; margin-bottom: 5px; display: block; color: #333;"></label>
+                <input type="text" id="extraFieldValue" class="form-control" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
             </div>
-            <input type="radio" name="customerType" value="student" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-        </label>
-
-        <!-- عيادة -->
-        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-            <div style="text-align: right;">
-                <strong style="font-size: 14px; color: #333; display: block;">عيادة</strong>
-                <span style="font-size: 12px; color: #777;">للعيادات والممارسين</span>
-            </div>
-            <input type="radio" name="customerType" value="clinic" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-        </label>
-
-        <!-- مخبر أسنان -->
-        <label style="border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: #fff; transition: 0.2s;">
-            <div style="text-align: right;">
-                <strong style="font-size: 14px; color: #333; display: block;">مخبر أسنان</strong>
-                <span style="font-size: 12px; color: #777;">لمخابر الأسنان والفرق</span>
-            </div>
-            <input type="radio" name="customerType" value="lab" onchange="toggleCustomerFields()" style="width: 18px; height: 18px; accent-color: #0056b3; cursor: pointer;">
-        </label>
-
-    </div>
-</div>
-
-<!-- الحقل الديناميكي (لرقم الطالب أو الرقم الضريبي) -->
-<div class="form-group" id="extraFieldContainer" style="display: none; grid-column: 1 / -1; margin-top: 15px;">
-    <label id="extraFieldLabel" style="font-weight: bold; margin-bottom: 5px; display: block; color: #333;"></label>
-    <input type="text" id="extraFieldValue" class="form-control" placeholder="" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-</div>
-
-
 
             <div class="form-group" style="margin-top: 20px;">
                 <label><span data-translate="mapLabel">تحديد الموقع الجغرافي على الخريطة</span> <span>*</span></label>
@@ -307,7 +281,7 @@
             
             <div class="totals-row">
                 <span data-translate="subtotal">المجموع:</span>
-                <span id="subTotal">$0.00</span>
+                <span id="subTotal">€0.00</span>
             </div>
             <div class="totals-row" id="discountRow" style="display: none; color: #16a34a;">
                 <span data-translate="discountLabel">الخصم:</span>
@@ -358,14 +332,14 @@
             </div>
             <div class="detail-row">
                 <span data-translate="grandTotalHeader">الإجمالي الكلي:</span>
-                <span id="lblGrandTotal" style="color: #0056b3;">$0.00</span>
+                <span id="lblGrandTotal" style="color: #0056b3;">€0.00</span>
             </div>
         </div>
 
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 25px; font-size: 13px; color: #166534; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <i class="fa-brands fa-whatsapp" style="font-size: 18px; color: #22c55e;"></i>
-            <span data-translate="whatsappSentMsg">تم إرسال تفاصيل الفاتورة والطلب تلقائياً إلى رقم واتساب الخاص بك من المختبر.</span>
-        </div>
+        <a id="whatsappSendBtn" href="#" target="_blank" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 14px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; color: #166534; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+    <i class="fa-brands fa-whatsapp" style="font-size: 22px; color: #22c55e;"></i>
+    <span>أرسل فاتورة طلبي على الواتس</span>
+</a>
 
         <a href="index.html" class="btn-primary" style="max-width: 250px; margin: 0 auto; text-decoration: none;">
             <i class="fa-solid fa-house"></i> <span data-translate="backToHome">العودة للرئيسية</span>
@@ -394,8 +368,15 @@
         </div>
     </div>
 
+    <!-- ملف الترجمة العام -->
+    <script src="lang.js"></script>
+
     <script>
-        const translations = {
+        if (typeof translations === 'undefined') { window.translations = {}; }
+        if (!translations['tr']) translations['tr'] = {};
+        if (!translations['ar']) translations['ar'] = {};
+
+        const extraTranslations = {
             ar: {
                 pageTitle: "DENTA STORE - إتمام الطلب",
                 freeShipping: "توصيل لجميع المناطق",
@@ -418,6 +399,19 @@
                 cashOnDelivery: "الدفع عند الاستلام",
                 bankTransfer: "تحويل عبر البنك",
                 bankNoticeText: "سيتم إرسال تفاصيل الحساب البنكي ورقم الآيبان لإتمام التحويل بعد تأكيد طلبك.",
+                customerTypeLabel: "اختر نوع العميل *",
+                typeNormal: "عميل عادي",
+                descNormal: "للعملاء الأفراد والطلبات العامة",
+                typeStudent: "طالب طب أسنان",
+                descStudent: "لطلاب كليات طب الأسنان",
+                typeClinic: "عيادة",
+                descClinic: "للعيادات والممارسين",
+                typeLab: "مخبر أسنان",
+                descLab: "لمخابر الأسنان والفرق",
+                studentFieldLabel: "رقم الطالب الجامعي *",
+                studentFieldPlaceholder: "أدخل رقمك الجامعي",
+                taxFieldLabel: "الرقم الضريبي *",
+                taxFieldPlaceholder: "أدخل الرقم الضريبي",
                 mapLabel: "تحديد الموقع الجغرافي على الخريطة",
                 mapDesc: "اضغط بالأسفل لفتح الخريطة وتحديد موقعك الحالي بدقة:",
                 mapBtn: "اختر الموقع من الخريطة",
@@ -448,7 +442,8 @@
                 paymentMethodHeader: "طريقة الدفع:",
                 grandTotalHeader: "الإجمالي الكلي:",
                 whatsappSentMsg: "تم إرسال تفاصيل الفاتورة والطلب تلقائياً إلى رقم واتساب الخاص بك من المختبر.",
-                backToHome: "العودة للرئيسية"
+                backToHome: "العودة للرئيسية",
+                alertExtraField: "يرجى إدخال البيانات المطلوبة (الرقم الجامعي أو الرقم الضريبي)"
             },
             tr: {
                 pageTitle: "DENTA STORE - Siparişi Tamamla",
@@ -472,6 +467,19 @@
                 cashOnDelivery: "Kapıda Ödeme",
                 bankTransfer: "Banka Havalesi",
                 bankNoticeText: "Siparişiniz onaylandıktan sonra havale için banka hesap bilgileri ve IBAN gönderilecektir.",
+                customerTypeLabel: "Müşteri Türünü Seçin *",
+                typeNormal: "Normal Müşteri",
+                descNormal: "Bireysel müşteriler ve genel siparişler için",
+                typeStudent: "Diş Hekimliği Öğrencisi",
+                descStudent: "Diş hekimliği fakültesi öğrencileri için",
+                typeClinic: "Klinik",
+                descClinic: "Klinikler ve pratisyenler için",
+                typeLab: "Diş Laboratuvarı",
+                descLab: "Diş laboratuvarları ve ekipler için",
+                studentFieldLabel: "Öğrenci Numarası *",
+                studentFieldPlaceholder: "Öğrenci numaranızı girin",
+                taxFieldLabel: "Vergi Numarası *",
+                taxFieldPlaceholder: "Vergi numaranızı girin",
                 mapLabel: "Harita Üzerinden Konum Belirleme",
                 mapDesc: "Haritayı açmak ve mevcut konumunuzu seçmek için aşağıya tıklayın:",
                 mapBtn: "Haritadan Konum Seç",
@@ -502,9 +510,18 @@
                 paymentMethodHeader: "Ödeme Yöntemi:",
                 grandTotalHeader: "Genel Toplam:",
                 whatsappSentMsg: "Fatura ve sipariş detayları laboratuvarımızdan WhatsApp numaranıza otomatik olarak gönderildi.",
-                backToHome: "Ana Sayfaya Dön"
+                backToHome: "Ana Sayfaya Dön",
+                alertExtraField: "Lütfen gerekli bilgileri girin (Öğrenci veya Vergi Numarası)"
             }
         };
+
+        for (let lang in extraTranslations) {
+            for (let key in extraTranslations[lang]) {
+                if (!translations[lang][key]) {
+                    translations[lang][key] = extraTranslations[lang][key];
+                }
+            }
+        }
 
         function togglePaymentNotice() {
             const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
@@ -540,7 +557,8 @@
             htmlRoot.setAttribute('lang', lang);
             localStorage.setItem('dentaLang', lang);
 
-            document.getElementById('languageSelectTop').value = lang;
+            const topSelect = document.getElementById('languageSelectTop');
+            if (topSelect) topSelect.value = lang;
 
             if (lang === 'tr') {
                 document.getElementById('backArrowIcon').className = "fa-solid fa-arrow-left";
@@ -569,13 +587,8 @@
             document.title = translations[lang].pageTitle;
             renderSteps(lang);
             renderCheckoutSummary();
+            toggleCustomerFields(); // تحديث نصوص الحقل الديناميكي حسب اللغة الجديدة
         }
-
-        window.onload = function() {
-            let savedLang = localStorage.getItem('dentaLang') || 'ar';
-            document.getElementById('languageSelectTop').value = savedLang;
-            changeLanguage(savedLang);
-        };
 
         let cart = JSON.parse(localStorage.getItem('dentaCart')) || [];
         let grandTotalVal = 0;
@@ -694,10 +707,42 @@
             grandTotalEl.innerText = `$${grandTotalVal.toFixed(2)}`;
         }
 
-        function completeOrder(event) { 
-            const currentLang = localStorage.getItem('dentaLang') || 'ar';
-            if (cart.length === 0) return;
-let orderData = {
+       function completeOrder(event) {
+    const currentLang = localStorage.getItem('dentaLang') || 'ar';
+    if (cart.length === 0) return;
+
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custLocation').value.trim();
+
+    if (!name || !phone) {
+        alert(translations[currentLang].alertNamePhone);
+        return;
+    }
+    if (!address) {
+        alert(translations[currentLang].alertAddress);
+        return;
+    }
+
+    const customerType = document.querySelector('input[name="customerType"]:checked').value;
+    const extraVal = document.getElementById('extraFieldValue').value.trim();
+    if ((customerType === 'student' || customerType === 'clinic' || customerType === 'lab') && !extraVal) {
+        alert(translations[currentLang].alertExtraField);
+        return;
+    }
+
+    const orderType = document.querySelector('input[name="orderType"]:checked').value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const randomOrderNum = '#ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+    // [التعديل هنا]: قراءة السعر النهائي المباشر بعد الخصم من الشاشة (العنصر #grandTotal) الحامل لـ $1.80 مثلاً
+    let finalTotalEl = document.getElementById('grandTotal');
+    let rawTotalText = finalTotalEl ? finalTotalEl.innerText : '';
+    let extractedTotal = parseFloat(rawTotalText.replace(/[^0-9.-]+/g, "")) || 0;
+
+    let finalPrice = extractedTotal > 0 ? extractedTotal : (typeof grandTotalVal !== 'undefined' ? grandTotalVal : parseFloat(localStorage.getItem('checkoutTotal') || 0));
+
+    let orderData = {
         orderNumber: randomOrderNum,
         name: name,
         clinic: document.getElementById('custClinic').value.trim(),
@@ -705,121 +750,150 @@ let orderData = {
         email: document.getElementById('custEmail').value.trim(),
         orderType: orderType,
         paymentMethod: paymentMethod,
-        // إضافة الحقول الجديدة هنا:
-        customerType: document.querySelector('input[name="customerType"]:checked').value,
-        extraId: document.getElementById('extraFieldValue').value.trim(),
-        // -------------------------
+        customerType: customerType,
+        extraId: extraVal,
         address: address,
         notes: document.getElementById('custNotes').value.trim(),
         items: cart,
-        total: grandTotalVal
+        total: finalPrice, // سيتم تخزين السعر الصحيح بعد الخصم هنا
+        date: new Date().toLocaleDateString('ar-SA')
     };
-      // تحقق من الحقل الإضافي
-    const customerType = document.querySelector('input[name="customerType"]:checked').value;
-    const extraVal = document.getElementById('extraFieldValue').value.trim();
-    if ((customerType === 'student' || customerType === 'clinic' || customerType === 'lab') && !extraVal) {
-        alert('يرجى إدخال الرقم الجامعي أو الضريبي');
-        return;
+
+    // حفظ الطلب ضمن قائمة الطلبات المتراكمة
+    let orders = JSON.parse(localStorage.getItem('store_orders')) || [];
+    orders.push(orderData);
+    localStorage.setItem('store_orders', JSON.stringify(orders));
+
+    // حفظ آخر طلب مؤقتاً لعرضه في صفحة النجاح
+    localStorage.setItem('lastOrder', JSON.stringify(orderData));
+    
+    localStorage.removeItem('dentaCart'); // تفريغ السلة
+
+    // إخفاء نموذج الدفع وعرض صفحة نجاح الطلب
+    document.getElementById('checkoutFormContainer').style.display = 'none';
+    document.getElementById('successViewContainer').style.display = 'block';
+
+    // تعبئة بيانات الفاتورة في صفحة النجاح
+    document.getElementById('lblOrderNum').innerText = randomOrderNum;
+    document.getElementById('lblClientName').innerText = name;
+    document.getElementById('lblOrderType').innerText = orderType;
+    document.getElementById('lblPaymentMethod').innerText = paymentMethod;
+    
+    // [التعديل هنا أيضاً]: إظهار السعر النهائي تماماً كما يظهر في ملخص الطلب مع رمز العملة والخصم
+    document.getElementById('lblGrandTotal').innerText = finalTotalEl ? finalTotalEl.innerText : `$${finalPrice.toFixed(2)}`;
+
+    console.log(`[WhatsApp Auto-Send Simulation]: تم إرسال تفاصيل الطلب رقم ${randomOrderNum} إلى العميل على الرقم ${phone} | الإجمالي النهائي : ${document.getElementById('lblGrandTotal').innerText}`);
+    // تفعيل زر الواتساب لإرسال الفاتورة برقم العميل وتفاصيل الطلب
+   // جلب رقم الواتساب للمخبر تلقائياً من إعدادات المتجر أو لوحة التحكم (مع وضع رقم افتراضي تركي إن لم يوجد)
+    // استدعاء رقم الواتساب الصحيح من إعدادات لوحة التحكم
+    const labPhone = localStorage.getItem('store_wa_primary') || "905xxxxxxxx";
+    const invoiceText = `مرحباً، لدي طلب جديد باسم ${name}.\nإليك تفاصيل الفاتورة:\n\nرقم الطلب: ${randomOrderNum}\nنوع الطلب: ${orderType}\nطريقة الدفع: ${paymentMethod}\nالإجمالي الكلي: ${document.getElementById('lblGrandTotal').innerText}\n\nرقم هاتف العميل للتواصل: ${phone}`;
+
+    const waButton = document.getElementById('whatsappSendBtn');
+    if (waButton) {
+        waButton.href = `https://wa.me/${labPhone}?text=${encodeURIComponent(invoiceText)}`;
     }
-
-            // حفظ الطلب في التخزين المؤقت
-            localStorage.setItem('lastOrder', JSON.stringify(orderData));
-            localStorage.removeItem('dentaCart'); // تفريغ السلة
-
-            // إخفاء نموذج الشك أوت وعرض صفحة نجاح الطلب
-            document.getElementById('checkoutFormContainer').style.display = 'none';
-            document.getElementById('successViewContainer').style.display = 'block';
-
-            // تعبئة بيانات الفاتورة في صفحة النجاح
-            document.getElementById('lblOrderNum').innerText = randomOrderNum;
-            document.getElementById('lblClientName').innerText = name;
-            document.getElementById('lblOrderType').innerText = orderType;
-            document.getElementById('lblPaymentMethod').innerText = paymentMethod;
-            document.getElementById('lblGrandTotal').innerText = `$${grandTotalVal.toFixed(2)}`;
-
-            // محاكاة إرسال رسالة الواتساب التلقائية من رقم المختبر لرقم العميل بالتفاصيل والملاحظات
-            console.log(`[WhatsApp Auto-Send Simulation]: تم إرسال تفاصيل الطلب رقم ${randomOrderNum} إلى العميل على الرقم ${phone} | النوع: ${orderType} | الدفع: ${paymentMethod}`);
-        }
-
+}
 
         // دالة إظهار أو إخفاء حقل الرقم الجامعي أو الضريبي بناءً على نوع العميل المختار
-function toggleCustomerFields() {
-    const selectedType = document.querySelector('input[name="customerType"]:checked').value;
-    const container = document.getElementById('extraFieldContainer');
-    const label = document.getElementById('extraFieldLabel');
-    const input = document.getElementById('extraFieldValue');
+        function toggleCustomerFields() {
+            const selectedType = document.querySelector('input[name="customerType"]:checked').value;
+            const container = document.getElementById('extraFieldContainer');
+            const label = document.getElementById('extraFieldLabel');
+            const input = document.getElementById('extraFieldValue');
+            const currentLang = localStorage.getItem('dentaLang') || 'ar';
 
-    if (selectedType === 'student') {
-        container.style.display = 'block';
-        label.innerText = 'رقم الطالب الجامعي *';
-        input.placeholder = 'أدخل رقمك الجامعي';
-        input.required = true;
-    } else if (selectedType === 'clinic' || selectedType === 'lab') {
-        container.style.display = 'block';
-        label.innerText = 'الرقم الضريبي *';
-        input.placeholder = 'أدخل الرقم الضريبي';
-        input.required = true;
+            if (selectedType === 'student') {
+                container.style.display = 'block';
+                label.innerText = translations[currentLang].studentFieldLabel;
+                input.placeholder = translations[currentLang].studentFieldPlaceholder;
+                input.required = true;
+            } else if (selectedType === 'clinic' || selectedType === 'lab') {
+                container.style.display = 'block';
+                label.innerText = translations[currentLang].taxFieldLabel;
+                input.placeholder = translations[currentLang].taxFieldPlaceholder;
+                input.required = true;
+            } else {
+                container.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        window.onload = function() {
+            let savedLang = localStorage.getItem('dentaLang') || 'ar';
+            const topSelect = document.getElementById('languageSelectTop');
+            if (topSelect) topSelect.value = savedLang;
+            changeLanguage(savedLang);
+
+            let savedTotal = localStorage.getItem('savedFinalTotal') || localStorage.getItem('checkoutTotal');
+            if (savedTotal) {
+                let totalEl = document.getElementById('grandTotal');
+                if (totalEl) {
+                    totalEl.innerText = savedTotal;
+                }
+            }
+        };
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // 1. قراءة اللغة المخزنة (الافتراضي عربي إذا لم يتم الاختيار مسبقاً 'ar')
+    const savedLang = localStorage.getItem('dentaLang') || 'ar';
+    
+    // 2. ضبط اتجاه الصفحة تلقائياً (RTL للغة العربية، LTR للغات الأخرى كالتركية)
+    if (savedLang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
     } else {
-        container.style.display = 'none';
-        input.required = false;
-        input.value = '';
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', savedLang);
     }
-}
-
-// دالة لحفظ بيانات العميل والطلب عند تأكيد الطلب
-function saveCustomerOrderData() {
-    const customerTypeElement = document.querySelector('input[name="customerType"]:checked');
-    if (!customerTypeElement) return;
-
-    const customerType = customerTypeElement.value;
-    const extraFieldValue = document.getElementById('extraFieldValue').value;
-
-    // التحقق من تعبئة الحقل الإضافي إذا كان مطلوباً
-    if ((customerType === 'student' || customerType === 'clinic' || customerType === 'lab') && !extraFieldValue.trim()) {
-        alert('يرجى إدخال البيانات المطلوبة (الرقم الجامعي أو الرقم الضريبي)');
-        return false;
+    
+    // 3. استدعاء دالة تطبيق الترجمات على نصوص الصفحة الحالية
+    if (typeof applyTranslations === 'function') {
+        applyTranslations(savedLang);
     }
+});
 
-    // حفظ البيانات في كائن خاص بالعميل لتخزينها وعدم ضياعها
-    const customerOrderInfo = {
-        customerType: customerType,
-        extraIdNumber: extraFieldValue,
-        savedAt: new Date().toISOString()
+function submitOrder(event) {
+    if (event) event.preventDefault();
+
+    // 1. جلب بيانات المستخدم النشط حالياً
+    const activeUser = JSON.parse(localStorage.getItem('dentaActiveUser')) || JSON.parse(localStorage.getItem('dentaUser')) || { name: "عميل زائر", email: "guest@store.com" };
+    
+    // 2. جلب محتويات السلة والبيانات المدخلة
+    const cart = JSON.parse(localStorage.getItem('dentaCart')) || [];
+    const orderTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 4.00; // مع رسوم الشحن مثلاً
+
+    // 3. بناء هيكل الطلب الجديد
+    const newOrder = {
+        id: 'ORD-' + Math.floor(100000 + Math.random() * 900000), // رقم طلب عشوائي مشابه لما يظهر عندك
+        customerName: activeUser.name || activeUser.email || "العميل",
+        customerEmail: activeUser.email || "",
+        date: new Date().toISOString().split('T')[0],
+        items: cart,
+        total: orderTotal.toFixed(2),
+        status: 'قيد المعالجة', // الحالة الافتراضية
+        paymentMethod: 'تحويل عبر البنك'
     };
 
-    localStorage.setItem('dentaCustomerOrderDetails', JSON.stringify(customerOrderInfo));
-    return true;
+    // 4. حفظ الطلب في قائمة الطلبات العامة (الخاصة بلوحة التحكم Admin)
+    const allOrders = JSON.parse(localStorage.getItem('dentaOrders')) || [];
+    allOrders.push(newOrder);
+    localStorage.setItem('dentaOrders', JSON.stringify(allOrders));
+
+    // 5. حفظ الطلب أيضاً في قائمة طلبات هذا المستخدم حصرياً (ليظهر في صفحة account.html)
+    const userOrdersKey = 'dentaUserOrders_' + (activeUser.email || 'guest');
+    const userOrders = JSON.parse(localStorage.getItem(userOrdersKey)) || [];
+    userOrders.push(newOrder);
+    localStorage.setItem(userOrdersKey, JSON.stringify(userOrders));
+
+    // 6. تفريغ السلة بعد نجاح الطلب
+    localStorage.removeItem('dentaCart');
+
+    // 7. التوجيه لصفحة النجاح أو تحديث العرض
+    window.location.href = 'order-success.html?orderId=' + newOrder.id;
 }
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    let savedTotal = localStorage.getItem('checkoutTotal');
-    if (savedTotal) {
-        let totalEl = document.getElementById('grandTotal');
-        if (totalEl) {
-            totalEl.innerText = savedTotal;
-        }
-    }
-});
-
-// مراقبة وتحديث السعر الإجمالي فوراً لضمان عدم عودته للسعر القديم
-window.addEventListener('load', function() {
-    let savedTotal = localStorage.getItem('savedFinalTotal');
-    if (savedTotal) {
-        let totalEl = document.getElementById('grandTotal');
-        if (totalEl) {
-            totalEl.innerText = savedTotal;
-        }
-        
-        // محاولة ثانية بعد جزء من الثانية لتجاوز أي سكريبت يقوم بإعادة الحساب عند التحميل
-        setTimeout(function() {
-            let totalElDelayed = document.getElementById('grandTotal');
-            if (totalElDelayed) {
-                totalElDelayed.innerText = savedTotal;
-            }
-        }, 300);
-    }
-});
     </script>
 </body>
 </html>
